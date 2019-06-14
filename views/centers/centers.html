@@ -1,0 +1,186 @@
+<div class="content-container" ng-controller="CenterController">
+    <ul class="breadcrumb">
+        <li class="active">{{'label.anchor.centers' | translate}}</li>
+    </ul>
+    <div class="card">
+        <div class="content">
+            <div class="clearfix"></div>
+            <form ng-submit="search()" class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <input ng-autofocus="true" ng-model="filterText" type="text" ng-keyup="onFilter()" class="span form-control" placeholder="{{'label.input.filterbynameorstatusoroffice' | translate}}">
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <input  data-ng-model="searchText" type="text" placeholder="{{'label.input.searchByNameExternalId' | translate}}" class="form-control"/>
+
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary form-control">
+                                    <span class="fa fa-search"></span>
+                                </button>
+                            </span>
+
+                            <span class="input-group-btn">
+                                <button type="button" ng-click="advancesearchButton()"
+                                    class="btn control btn-default searchButton">
+                                            <i class="fa fa-chevron-down"></i>
+                                </button>
+                            </span>
+
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="#/createcenter" class="btn btn-primary pull-right" has-permission='CREATE_CENTER'><i class="fa fa-plus "></i>{{'label.button.createcenter' | translate}}</a>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Displaying the advance search form -->
+
+            <div uib-collapse="isCollapsed" class="blockoverlay" style="overflow: hidden;">
+
+                       
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="text" placeholder="Center name"
+                                   ng-model="name" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-md-4">    
+                        <div class="form-group">
+                            <input type="text" placeholder="Center external id"
+                                   ng-model="mobileNo" class="form-control"/>
+                        </div>
+                    </div>    
+                </div>
+                
+                <div class="row">    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <select  id="officeid" ng-model="adOfficeId"  class="form-control"
+                            ng-options="office.id as office.name for office in offices"
+                            ng-change="changeOffice(adOfficeId)">
+                                 <option value="">Select a office</option>
+                            </select>
+                        </div>    
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <select id="status" ng-model="status" class="form-control"
+                            ng-options="status.id as status.name for status in Status">
+                                 <option value="">Select a center status</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>    
+                    
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <select id="loanOfficer" ng-model="loanOfficer" class="form-control"
+                            ng-options="staff.id as staff.displayName for staff in staffs">
+                                 <option value="">Select a center loan officer</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                </div>    
+                    
+                <span><a ng-click="advancesearch(1)" class="btn btn-primary"><i class="icon-search icon-white"></i>{{'label.button.advancesearch'
+                    | translate}}</a>
+                </span>
+
+                <span>
+                    <a ng-click="resetSearch()" class="btn btn-primary">Reset</a>
+                </span> 
+            </div>
+
+            <!-- Displaying the Search Result -->
+
+            <div uib-collapse="isdisplayed" class="blockoverlay searchResultDisplay colorchangeforcenter" >
+                    
+                <div class="row">
+                    <div class="col-md-4">  
+                                    
+                    </div>
+                    <div class="col-md-4">  
+                           <span class="labelBold">You have searched for </span>            
+                    </div>
+                    <div class="col-md-4 "> 
+                        <div class="form-group deleteSearchResult">              
+                           <a ng-click="searchResultButton()" ><i class="fa fa-times deleteiconcolor"></i></a>  
+                        </div>   
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">  
+                        <div class="form-group">                
+                           <span class="labelBold">Center Name : </span> {{DisplayName}} 
+                        </div>                       
+                    </div>
+                    <div class="col-md-4">     
+                        <div class="form-group">             
+                           <span class="labelBold">Center External Id : </span> {{DisplayMobileNo}} 
+                        </div>                       
+                    </div>
+                    <div class="col-md-4">  
+                        <div class="form-group">                
+                           <span class="labelBold">Office Name : </span> {{DisplayOfficeName.name}} 
+                        </div>                        
+                    </div>
+                </div>  
+
+                <div class="row">
+                    <div class="col-md-4">   
+                        <div class="form-group">               
+                           <span class="labelBold">Center Status : </span> {{DisplayStatus.name}} 
+                        </div>                       
+                    </div>
+                    <div class="col-md-4">  
+                        <div class="form-group">                
+                           <span class="labelBold">Center Loan Officer : </span> {{DisplayloanOfficer.displayName}} 
+                        </div>                       
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">  
+                                    
+                    </div>
+                    <div class="col-md-4">  
+                           <span class="labelBold">Total no of centers : </span> {{totalCenters}}         
+                    </div>
+                </div>    
+
+                
+            </div>
+
+            <table class="table">
+                <thead>
+                <tr class="graybg">
+                    <th>{{'label.heading.name' | translate}}</th>
+                    <th> {{'label.heading.accnum' | translate}}</th>
+                    <th> {{'label.heading.externalid' | translate}}</th>
+                    <th>{{'label.heading.status' | translate}}</th>
+                    <th>{{'label.heading.office' | translate}}</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr class="pointer-main" dir-paginate="center in centers | orderBy:'name':reverse  | filter:filterText |  itemsPerPage: centersPerPage" total-items="totalCenters" pagination-id="centers">
+                    <td class="pointer" data-ng-click="routeTo(center.id)">{{center.name}}</td>
+                    <td class="pointer" data-ng-click="routeTo(center.id)">{{center.accountNo}}</td>
+                    <td class="pointer" data-ng-click="routeTo(center.id)">{{center.externalId}}</td>
+                    <td class="pointer" data-ng-click="routeTo(center.id)">
+                        <i class="fa fa-stop {{center.status.code | StatusLookup}}"></i>&nbsp;&nbsp;{{center.status.value}}
+                    </td>
+                    <td class="pointer" data-ng-click="routeTo(center.id)">{{center.officeName}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <dir-pagination-controls boundary-links="true" pagination-id="centers" template-url="bower_components/angular-utils-pagination/dirPagination.tpl.html" on-page-change="getResultsPage(newPageNumber)"></dir-pagination-controls>
+        </div>
+    </div>
+</div>

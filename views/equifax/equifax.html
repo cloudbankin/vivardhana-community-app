@@ -1,0 +1,57 @@
+<div class="content-container" ng-controller="EquifaxController">
+    <ul class="breadcrumb">
+        <li class="active">{{ 'label.button.equifax' | translate }}</li>
+    </ul>
+    <div class="card">
+        <div class="content">
+                <div class="toolbar">
+                    <h4>{{ 'label.button.equifax' | translate }}</h4>
+                </div>
+            <br>
+                <div class="row">
+                    <div class="col-sm-7 col-md-7">
+
+                        <form name="highMarkForm" novalidate="" class="form-horizontal"
+                            rc-submit="submit()">
+                            <api-validate></api-validate>
+                            <fieldset>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4" for="asOnDate">{{'label.input.asOnDate' | translate}}<span
+                                            class="required">*</span></label>
+
+                                    <div class="col-sm-4">
+                                        <input id="asOnDate" sort type="text" datepicker-pop="dd MMMM yyyy" ng-model="formData.asOnDate"
+                                            class="form-control" is-open="opened" required max="restrictDate"/>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <form-validate valattributeform="highMarkForm" valattribute="asOnDate"/>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4" for="closedFrom">Closed loans From<span
+                                            class="required">*</span></label>
+
+                                    <div class="col-sm-4">
+                                        <input id="closedFrom" sort type="text" datepicker-pop="dd MMMM yyyy" ng-model="formData.closedFrom"
+                                            class="form-control" is-open="opened" required max="restrictDate"/>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <form-validate valattributeform="highMarkForm" valattribute="closedFrom"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-offset-3">
+                                    <button type="submit" class="btn btn-primary">{{'label.button.save' | translate}}</button>
+                                </div>
+                            </fieldset>
+                        </form>
+
+                    </div>
+
+                </div>  
+
+        </div>
+    </div>
+
+</div>    

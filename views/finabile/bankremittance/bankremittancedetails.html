@@ -1,0 +1,112 @@
+<div class="content-container">
+    <ul class="breadcrumb">
+		<li>Bank Remittance Details</li>
+    </ul>
+    <div class="card" ng-controller="BankRemittanceController">
+    	<div class="content">
+    		<div class="toolbar">
+    			<h4>Bank Remittance Details</h4>
+    		</div>
+    		<br/>
+    		<form name="bankRemittance" novalidate="" class="form-horizontal" 
+    		      rc-submit="submit()"> 
+    		    <api-validate></api-validate>
+    		    <fieldset>
+    		           <div class="form-group">
+    		                <label class="control-label col-sm-2">Start Date<span
+								class="required">*</span></label>
+    		
+    		                <div class="col-sm-3">
+    		                    <input type="text"  id="startDate" ng-model="startDate" class="form-control"
+								datepicker-pop="dd MMMM yyyy" is-open="opened"
+    		                            value="{{office.id}}"/>
+    		                </div><small  class="error">{{startDateErrorMsg}}</small>
+    		            </div>
+    		        
+    		            <div class="form-group">
+    		                <label class="control-label col-sm-2">End Date<span
+								class="required">*</span>
+				</label>
+    		                <div class="col-sm-3">
+    		                    <input id="endDate" sort type="text" datepicker-pop="dd MMMM yyyy" ng-model="endDate"
+    		                           class="form-control" is-open="opened" />
+    		                </div><small  class="error">{{endDateErrorMsg}}</small>
+    		            </div>
+    		        
+    		           
+    		        <div class="col-md-offset-3">
+    		            <a id="cancel" data-ng-click="refresh()">
+    		                <button type="reset" class="btn btn-default">Reset</button>
+    		            </a>
+						<button  class="btn btn-primary"data-ng-click="searchedData(bankId,startDate,endDate)" >Search</button>
+						
+					</div>
+					<br/>
+					<div class="form-group">
+						<label class="control-label col-sm-2">Bank<span
+							class="required">*</span></label>
+		
+						<div class="col-sm-3">
+							<select id="bankId"  type="text" name="bankId" ng-model="bankId" class="form-control"
+							ng-options="bankDetail.id as bankDetail.name for bankDetail in bankDetails" value="{{bankDetail.id}}"
+								></select>
+						</div><small  class="error">{{bankNameErrorMsg}}</small>&nbsp;&nbsp;<small  class="error">{{selectedLoanErrorMsg}}</small>
+					</div>
+					<div class="col-md-offset-3">
+							<a target="_blank" href="{{hostUrl}}{{clientdocument.docUrl}}">
+					<button class="btn btn-primary" data-ng-click="downloadData(bankId)" >Generate File</button>
+				</a>&nbsp;&nbsp;
+				<input type ="checkbox" ng-change="generatedApprovedLoans(generateFile,bankId)" ng-model = "generateFile">Already generated </div>
+							<br/>
+								
+							
+						
+					
+    		    </fieldset>
+			 </form> 
+			<table class="table">
+				<thead>
+				<tr class="graybg">
+					<th><input  type="checkbox"  data-ng-if="!generateFile" ng-change="checkAll(allBankDetails)" ng-model="allBankDetails"></th>
+					<th data-ng-if="generateFile">Bank Reminttance</th>
+					<th>Office</th>
+					<th>Group Name</th>
+					<th>Group Id</th>
+					<th>Client Name</th>
+					<th>Client Id</th>
+					<th>Bank Account No</th>
+					<th>Benificiary Name</th>
+					<th>Benificiary Address</th>
+					<th>Amount</th>
+					
+					<th>IFSC code</th>
+				</tr>
+				</thead>
+				<tbody>
+						<tr dir-paginate="approvedLoan in approvedLoans | filter:filterText | itemsPerPage: approvedLoansPerPage | orderBy: 'approvedLoan.id'" 
+                        class="pointer-main" total-items="totalApprovedLoans" >
+				<!-- <tr class="pointer-main" ng-repeat="approvedLoan in approvedLoans | filter:filterText"> -->
+					<td class="pointer" ><input type="checkbox" ng-model="approvedLoan.bankDetails" ng-change="selectedApproveLoan(approvedLoan.id,approvedLoan.bankDetails)" ng-value="{{unCheck}}"></td>
+					<td class="pointer" data-ng-click="routeTo(approvedLoan.id)" data-ng-if="generateFile" >{{approvedLoan.bankCodeName}}</td>
+					<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.officeName}}</td>
+					<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.groupDisplayName}}</td>
+					<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.groupId}}</td>
+					<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.clientFullName}}</td>
+					<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.accountNumber}}</td>
+					<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.bankAccountnumber}}</td>
+					<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.accountHolderName}}</td>
+					<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.address}}</td>
+					<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.principal}}</td>
+
+					<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.iFSCCode}}</td>
+
+				</tr>
+				</tbody>
+			</table>
+			
+			<dir-pagination-controls align="center" boundary-links="true" template-url="bower_components/angular-utils-pagination/dirPagination.tpl.html"
+                on-page-change="getResultsPage(newPageNumber)">
+            </dir-pagination-controls>
+    	</div>
+    </div>
+</div>
