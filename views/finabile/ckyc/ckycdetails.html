@@ -1,0 +1,114 @@
+<div class="content-container">
+    <ul class="breadcrumb">
+		<li>Central - Know Your Customer</li>
+    </ul>
+    <div class="card" ng-controller="CKYCController">
+    	<div class="content">
+    		<div class="toolbar">
+				<h4>Central - Know Your Customer</h4>
+				<button style="float:right"  ng-click="routeTockyc()" class="btn btn-primary">{{
+                    'CKYC Id Upload'}}
+                </button>
+    		</div>
+    		<br/>
+    		<form name="bankRemittance" novalidate="" class="form-horizontal" 
+    		      rc-submit="submit()"> 
+    		    <api-validate></api-validate>
+    		    <fieldset>
+					<div class="form-group">		
+							<div class="col-sm-8">
+							</div>
+							<div class="col-sm-4">
+									<div class="col-sm-10" >
+											<input  ng-model="filter"  type="text"
+														class="form-control unstyled"
+														placeholder="{{'Filter by name/pan'}}">
+									</div>
+									<div class="col-sm-2">
+											<span class="input-group-btn">
+											<button class="btn btn-primary form-control" ng-click="searchpan()">
+											<span class="fa fa-search"></span>
+											</button>
+											</span>
+								    </div>
+						</div>
+					</div>
+    		           <div class="form-group">
+    		                <label class="control-label col-sm-2">Start Date<span
+								class="required">*</span></label>
+    		
+    		                <div class="col-sm-3">
+    		                    <input sort type="text"  id="startDate" ng-model="startDate" class="form-control"
+								datepicker-pop="dd MMMM yyyy" is-open="opened"
+    		                           />
+    		                </div><small  class="error">{{startDateErrorMsg}}</small>
+    		            </div>
+    		        
+    		            <div class="form-group">
+    		                <label class="control-label col-sm-2">End Date<span
+								class="required">*</span>
+				</label>
+    		                <div class="col-sm-3">
+    		                    <input id="endDate" sort type="text" datepicker-pop="dd MMMM yyyy" ng-model="endDate"
+    		                           class="form-control" is-open="opened" />
+    		                </div><small  class="error">{{endDateErrorMsg}}</small>
+    		            </div>
+    		        
+    		           
+    		        <div class="col-md-offset-3">
+    		            <a id="cancel" data-ng-click="refresh()">
+    		                <button type="reset" class="btn btn-default">Reset</button>
+    		            </a>
+						<button  class="btn btn-primary"data-ng-click="searchedData(startDate,endDate)" >Search</button>
+						
+						<a target="_blank" href="{{hostUrl}}{{clientdocument.docUrl}}">
+							<button class="btn btn-primary" data-ng-click="downloadData()" >File</button>
+						</a>&nbsp;&nbsp;
+						<input type ="checkbox" ng-change="generatedApprovedLoans(generateFile)" ng-model = "generateFile">Already generated 
+
+					</div>
+					<br/>
+					<!-- <div class="form-group">
+						<label class="control-label col-sm-2">Bank<span
+							class="required">*</span></label>
+		
+						<div class="col-sm-3">
+							<select id="bankId"  type="text" name="bankId" ng-model="bankId" class="form-control"
+							ng-options="bankDetail.id as bankDetail.name for bankDetail in bankDetails" value="{{bankDetail.id}}"
+								></select>
+						</div><small  class="error">{{bankNameErrorMsg}}</small>&nbsp;&nbsp;<small  class="error">{{selectedLoanErrorMsg}}</small>
+					</div> -->
+		
+				 </fieldset>
+			 </form> 
+			<table class="table">
+				<thead>
+				<tr class="graybg">
+					<th><input  type="checkbox"  data-ng-if="!generateFile" ng-change="checkAll(allBankDetails)" ng-model="allBankDetails"></th>
+					<!-- <th data-ng-if="generateFile">Bank Reminttance</th> -->
+					<th>Office</th>
+					<th>Client Id</th>
+					<th>Client Name</th>
+					<th>Activation Date</th>
+				</tr>
+				</thead>
+				<tbody>
+						<tr dir-paginate="approvedLoan in approvedLoans | filter:filterText | itemsPerPage: approvedLoansPerPage | orderBy: 'approvedLoan.id'" 
+                        class="pointer-main" total-items="totalApprovedLoans" >
+				<!-- <tr class="pointer-main" ng-repeat="approvedLoan in approvedLoans | filter:filterText"> -->
+					<td class="pointer" ><input type="checkbox" ng-model="approvedLoan.bankDetails" ng-change="selectedApproveLoan(approvedLoan.id,approvedLoan.bankDetails)" ng-value="{{unCheck}}"></td>
+					<!-- <td class="pointer" data-ng-click="routeTo(approvedLoan.id)" data-ng-if="generateFile" >{{approvedLoan.bankCodeName}}</td> -->
+					<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.officeName}}</td>
+					<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.clientId}}</td>
+					<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.clientName}}</td>
+					<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.clientActivationDate|DateFormat}}</td>
+				</tr>
+				</tbody>
+			</table>
+			
+			<dir-pagination-controls align="center" boundary-links="true" template-url="bower_components/angular-utils-pagination/dirPagination.tpl.html"
+                on-page-change="getResultsPage(newPageNumber)">
+            </dir-pagination-controls>
+    	</div>
+    </div>
+</div>
