@@ -352,6 +352,7 @@
 
     "#Enumeration & Error Messages": "..",
     "label.error": "Error",
+    "error.validation.collectionsheet1": "End date must be after the Start date",
     "error.login.failed": "Please try again, your credentials are not valid.",
     "error.connection.failed": "Couldn't connect to server. Make sure you are using correct settings.",
     "error.msg.command.unsupported": "Programmer error: The `command` issued is not supported.",
@@ -2731,6 +2732,7 @@
     "label.input.town_village":"Town / Village",
     "label.input.county_district":"County / District",
     "label.input.state_province":"State / Province",
+    "label.input.district":"District",
     "label.input.postal_code":"Postal Code",
     "label.input.latitude":"Latitude",
     "label.input.longitude":"Longitude",
@@ -4281,8 +4283,8 @@
     "label.heading.repaymentscheduleing.rule" : "Repayment Scheduleing Type",
 
     "#Finabile.Error.Details":"-------",
-    "error.bankRemittance.invalid.start.date":"Start date must be less than or equal to current date and it should not be in future",
-    "error.bankRemittance.invalid.end.date.future.exception":"End date must be greater than or equal to start date and it should not be in future",
+    "error.bankRemittance.invalid.start.date":"Start date must be past and current date ",
+    "error.bankRemittance.invalid.end.date.future.exception":"End date must be after the start date and it cannot be future date",
     "error.bankRemittance.invalid.end.date":"End date must be after the start date",
     "error.msg.bankRemittance.id.invalid":"Selected loan already marked in another bank"
 }

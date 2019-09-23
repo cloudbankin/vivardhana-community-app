@@ -4,7 +4,7 @@
 	</ul>
 	<div class="card">
 		<div class="content">
-				<form name="SMSintegrationControllerform" novalidate class="form-horizontal" rc-submit="submit()">
+				<form name="SMSintegrationControllerform" novalidate class="form-horizontal" >
 				<api-validate></api-validate>
 				<h2><strong ng-show="noData" style="padding-top: 400px !important;">{{'label.norepaymentsanddisbursalareavailable' |
 				    translate}}</strong></h2>
@@ -109,13 +109,19 @@
 					</div>
 
 				    <div class="form-group">
-				    	<div class="col-sm-2">
+				    	<div class="col-sm-5">
 				    					    	<div class="col-sm-2">
 
         
 					        <button class="btn btn-primary" ng-click="submit()">{{'Submit'}}
                                 <i class="fa fa-circle-arrow-right"></i></button>
-                                </div>
+								</div>
+								<div class="col-sm-2">
+
+        
+										<button class="btn btn-primary" ng-click="Sendsms()">{{'Send SMS'}}
+											</button>
+											</div>
 						</div>
 					</div>
 
@@ -133,25 +139,29 @@
 				<table class="table">
 					<thead>
 					<tr class="graybg">
+							<!-- <th><input  type="checkbox"   ng-change="checkAll(allLoanDetails)" ng-model="allClientDetails"></th> -->
+							<th><input  type="checkbox"   ng-change="checkAll(allBankDetails)" ng-model="allBankDetails"></th>
 						<th>Account Number</th>
 						<th>Name</th>
 						<th>Mobile Number</th>
 						<th>Due date</th>
 						<th>Installment</th>
 						<th>Repayment Amount</th>
-						<th>Status</th>
+						<!-- <th>Status</th> -->
 					</tr>
 					</thead>
 					<tbody>
-							<tr dir-paginate="reminderData in smsReminderData | filter:filterText | itemsPerPage: approvedLoansPerPage | orderBy: 'approvedLoan.id'" 
+							<tr dir-paginate="approvedLoan in smsReminderData | filter:filterText | itemsPerPage: approvedLoansPerPage | orderBy: 'reminderData.id'" 
 							class="pointer-main" total-items="totalApprovedLoans" >
-						<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.accountNumber}}</td>
-						<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.bankAccountnumber}}</td>
-						<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.accountHolderName}}</td>
-						<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.address}}</td>
-						<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.principal}}</td>
-						<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.iFSCCode}}</td>
-						<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.iFSCCode}}</td>
+						<!-- <td class="pointer" ><input type="checkbox" ng-model="reminderData.LoanDetails" ng-change="selectedApproveLoan(reminderData.id,reminderData.bankDetails)" ng-value="{{unCheck}}"></td> -->
+						<td class="pointer" ><input type="checkbox" ng-model="approvedLoan.bankDetails" ng-change="selectedApproveLoan(approvedLoan.id,approvedLoan.bankDetails)" ng-value="{{unCheck}}"></td>
+						<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.loanAccountNumber}}</td>
+						<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.name}}</td>
+						<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.mobileno}}</td>
+						<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.duedate}}</td>
+						<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.installmentNumber}}</td>
+						<td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{approvedLoan.amount}}</td>
+						<!-- <td class="pointer" data-ng-click="routeTo(approvedLoan.id)">{{reminderData.iFSCCode}}</td> -->
 					</tr>
 					</tbody>
 				</table>

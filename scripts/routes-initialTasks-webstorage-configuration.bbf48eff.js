@@ -136,6 +136,15 @@
             .when('/newjlgloanaccount/:groupId', {
                 templateUrl: 'views/loans/newjlgloanaccount.html'
             })
+            .when('/ckyc', {
+                templateUrl: 'views/finabile/ckyc/ckycdetails.html'
+            })
+            .when('/ckycerror', {
+                templateUrl: 'views/finabile/ckyc/ckycerrorreport.html'
+            })
+            .when('/ckycid', {
+                templateUrl: 'views/finabile/ckyc/ckycidupload.html'
+            })
             .when('/viewloanaccount/:id', {
                 templateUrl: 'views/loans/viewloanaccountdetails.html'
             })

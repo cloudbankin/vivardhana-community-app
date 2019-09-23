@@ -694,6 +694,29 @@
                     SMSintegrationResource: defineResource(apiVer + "/collectionsheet/smsReminderData", {officeId:'@officeId',centerId:'@centerId',groupId:'@groupId',loanOfficerId:'@loanOfficerId',startDate:'@startDate',endDate:'@endDate'}, {
                         getSmsReminderData:{method:'GET', params:{},isArray : true}
                     }),
+                    SMSsend: defineResource(apiVer + "/collectionsheet/reminder", {}, {
+                        getSmsReminderData:{method:'POST', params:{}}
+                    }),
+                    cKYCResource: defineResource(apiVer + "/ckyc", {}, {
+                        getAll: {method: 'GET', params: {limit: 1000}},
+                        save: {method: 'POST', params: {}}
+                     }),
+                    cKYCGeneratedClientsResource: defineResource(apiVer + "/ckyc/generatedClients", {}, {
+                        getAllCKYCClients:{method:'GET', params:{},isArray : true}
+                    }),
+                    cKYCSearchedResource: defineResource(apiVer + "/ckyc/search", {startDate:'@startDate',endDate:'@endDate'}, {
+                        search:{method:'GET', params:{},isArray : true}
+                    }),
+                    cKYCPanSearchedResource: defineResource(apiVer + "/ckyc/pansearch", {name:'@name',panno:'@panno'}, {
+                        search:{method:'GET', params:{},isArray : true}
+                    }),
+                    postalcode: defineResource(apiVer + "/state/statedetails", {pincode:'@pincode'}, {
+                        addressdetails:{method:'GET', params:{},isArray : true}
+                    }),
+                    postalcode1: defineResource(apiVer + "/state/statedetails1", {pincode:'@pincode'}, {
+                        addressdetails:{method:'GET', params:{},isArray : true}
+                    }),
+
                 };
             }];
         }

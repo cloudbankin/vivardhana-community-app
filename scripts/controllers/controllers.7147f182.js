@@ -3782,6 +3782,7 @@
             scope.removeAddress=function(index)
             {
                 scope.addressArray.splice(index,1);
+                scope.formData.address.splice(index,1);
             }
 
 
@@ -3789,7 +3790,33 @@
 
 // end of address
 
-            
+
+            //added
+            resourceFactory.postalcode.addressdetails({pincode:scope.pincode},function(data)
+            {
+                scope.stateLists =data;
+            });
+
+            scope.postalCodefunction = function(i){
+                var use=scope.addressArray[i].postalCode;
+
+                if(use.toString().length==6)
+                {
+                    scope.pincode=use;
+                    resourceFactory.postalcode1.addressdetails({pincode:scope.pincode},function(data)
+            {
+                scope.addressArray[i].stateProvinceId ="";
+                scope.addressArray[i].stateProvinceId =data[0].state;
+                scope.addressArray[i].city = data[0].district;
+                scope.addressArray[i].countryId =32;
+            });
+                }
+            }
+
+            //added
+
+
+                        
 
             scope.displayPersonOrNonPersonOptions = function (legalFormId) {
                 if(legalFormId == scope.clientPersonId || legalFormId == null) {
@@ -4016,8 +4043,9 @@
                             temp.isActive=scope.addressArray[i].isActive;
 
                         }
-                        scope.formData.address.push(temp);
+                        scope.formData.address[i] = temp;
                     }
+                    
                 }
 
                 if(scope.formData.datatables)
@@ -4337,14 +4365,15 @@
             scope.clientId = routeParams.clientId;
             scope.resourceId = routeParams.resourceId;
             scope.onFileSelect = function ($files) {
-                scope.file = $files[0];
+                scope.formData.file = $files[0];
             };
 
             scope.submit = function () {
                 Upload.upload({
                     url:  $rootScope.hostUrl + API_VERSION + '/client_identifiers/' + scope.resourceId + '/documents',
-                    data: scope.formData,
-                    file: scope.file
+                    // data: scope.formData,
+                    // file: scope.file
+                    data: { name: scope.formData.name, file: scope.formData.file },
                 }).then(function (data) {
                         // to fix IE not refreshing the model
                         if (!scope.$$phase) {
@@ -6108,6 +6137,31 @@
                 })
             }
 
+
+            //added
+            resourceFactory.postalcode.addressdetails({pincode:$scope.pincode},function(data)
+            {
+                $scope.stateLists =data;
+            });
+
+            $scope.postalCodefunction = function(use){
+                //var use=$scope.formData.postalCode;
+
+                if(use.toString().length==6)
+                {
+                    $scope.pincode=$scope.formData.postalCode;
+                    resourceFactory.postalcode1.addressdetails({pincode:$scope.pincode},function(data)
+            {
+                $scope.formData.stateProvinceId ="";
+                $scope.formData.stateProvinceId =data[0].state;
+                $scope.formData.city = data[0].district;
+                $scope.formData.countryId=32;
+            });
+                }
+            }
+
+            //added
+
             $scope.updateaddress=function()
             {
 
@@ -6186,6 +6240,29 @@
             }
 
 
+                //added
+                resourceFactory.postalcode.addressdetails({pincode:$scope.pincode},function(data)
+                {
+                $scope.stateLists =data;
+                });
+
+                $scope.postalCodefunction = function(use){
+                //var use=$scope.formData.postalCode;
+
+                if(use.toString().length==6)
+                {
+                $scope.pincode=$scope.formData.postalCode;
+                resourceFactory.postalcode1.addressdetails({pincode:$scope.pincode},function(data)
+                {
+                    $scope.formData.stateProvinceId ="";
+                    $scope.formData.stateProvinceId =data[0].state;
+                    $scope.formData.city = data[0].district;
+                });
+                }
+                }
+
+                //added
+
 
 
                 resourceFactory.clientAddress.get({type:addresstypid,clientId:clientId},function(data)
@@ -6234,9 +6311,9 @@
                             {
                                 $scope.formData.countryId=data[i].countryId;
                             }
-                            if(data[i].postalCode&&$scope.postalCode)
-                            {
-                                $scope.formData.postalCode=data[i].postalCode;
+                            if (data[i].postalCode && $scope.postalCode) {
+                                var pc=data[i].postalCode;
+                                $scope.formData.postalCode = parseInt(pc);
                             }
                             if(data[i].latitude&&$scope.latitue)
                             {
@@ -17654,10 +17731,9 @@ scope.initPage();
                        
                     });
 
-                }else if(!bankId && generatedApprovedLoans){
+                }else if(!bankId){
                     scope.bankNameErrorMsg = "Bank Name Required";
                   }else{
-                    scope.bankNameErrorMsg = "";
                     route.reload();
                 }
             }
@@ -31714,6 +31790,8 @@ scope.initPage();
             scope.centers = [];
             scope.groups = [];
             scope.clientsAttendance = [];
+            var selectedLoans = [];
+            scope.smsdata = {}
             scope.calendarId = '';
             scope.formData = {};
             scope.centerId = '';
@@ -31743,6 +31821,72 @@ scope.initPage();
             //         scope.SMSintegrationform.loanOfficer.$error.req = true;
             //     }
             // };
+
+            //add
+
+            scope.checkAll = function (selectAll) {
+                if (selectAll) {
+                    for (var i = 0; i < scope.smsReminderData.length; i++) {
+                        selectedLoans.push(scope.smsReminderData[i].id);
+                        scope.smsReminderData[i].bankDetails = true;
+                    }
+
+                } else {
+                    for (var i = 0; i < scope.smsReminderData.length; i++) {
+                        selectedLoans = _.without(selectedLoans, scope.smsReminderData[i].id)
+                        scope.smsReminderData[i].bankDetails = false;
+
+                    }
+                }
+                selectedLoans = _.uniq(selectedLoans);
+            }
+            scope.selectedApproveLoan = function (id, bankDetails, selectedApproveLoan) {
+                for (var i = 0; i < scope.smsReminderData.length; i++) {
+                    if (scope.smsReminderData[i].id === id) {
+                        if (bankDetails === true) {
+                            scope.smsReminderData[i].bankDetails = true;
+                            selectedLoans.push(id);
+                            break;
+                        } else {
+                            scope.smsReminderData[i].bankDetails = false;
+                            selectedLoans = _.without(selectedLoans, scope.smsReminderData[i].id);
+                            break;
+                        }
+                    }
+                }
+
+                if (selectedLoans.length === 0) {
+                    scope.allBankDetails = false;
+                }
+
+                selectedLoans = _.uniq(selectedLoans);
+            };
+
+
+
+            scope.Sendsms = function()
+            {
+                console.log(selectedLoans);
+                scope.smsdata.loans=selectedLoans;
+                scope.smsdata.startDate = dateFilter(scope.date.startDate, scope.df);
+                    scope.smsdata.endDate = dateFilter(scope.date.endDate, scope.df);
+                    scope.smsdata.dateFormat = scope.df;
+                 scope.smsdata.locale = scope.optlang.code;
+                
+                resourceFactory.SMSsend.getSmsReminderData(scope.smsdata, function (data) {
+                    //location.path('/viewclient/' + data.clientId);
+                    scope.officeId="";
+                    scope.loanOfficerId="";
+                    scope.centerId="";
+                    scope.groupId="";
+                    scope.date.startDate="";
+                    scope.date.endDate="";
+
+                });
+
+            }
+
+            //add
 
             scope.officeSelected = function (officeId) {
                 scope.officeId = officeId;
@@ -31894,3 +32038,269 @@ scope.initPage();
 ;
 
 //end of bulk reminder
+
+//start
+(function (module) {
+    mifosX.controllers = _.extend(module, {
+        CKYCController: function (scope, resourceFactory, location, dateFilter, route, $rootScope, $http) {
+            scope.offices = [];
+            scope.first = {};
+            scope.formData = {};
+            scope.actualApprovedLoans = [];
+            scope.approvedLoan = {};
+            var selectedLoans = [];
+            scope.bankDetails = [];
+            scope.approvedLoanDetails = [];
+            scope.bankId;
+            scope.first.date = new Date();
+            scope.restrictDate = new Date();
+
+            scope.allBankDetails = false;
+            //start
+            scope.approvedLoansPerPage = 100;
+
+            // scope.routeTo = function (id) {
+            //     location.path('/viewchannelpartner/' + id);
+            // };
+
+            scope.getResultsPage = function (pageNumber) {
+                if (scope.searchText) {
+                    var startPosition = (pageNumber - 1) * scope.approvedLoansPerPage;
+                    scope.approvedLoans = scope.actualApprovedLoans.slice(startPosition, startPosition + scope.approvedLoansPerPage);
+                    return;
+                }
+                // if(scope.lenderId || scope.schemeId || scope.gstin || scope.pan){
+                //      scope.advancesearch(pageNumber);
+                //      return;
+                // }
+
+                var items = resourceFactory.cKYCResource.getAll({
+                    offset: ((pageNumber - 1) * scope.approvedLoansPerPage),
+                    limit: scope.approvedLoansPerPage
+                }, function (data) {
+                    scope.approvedLoans = data.pageItems;
+                    scope.refresh();
+                });
+
+            }
+
+            scope.initPage = function () {
+
+                var items = resourceFactory.cKYCResource.getAll({
+                    offset: 0,
+                    limit: scope.approvedLoansPerPage
+                }, function (data) {
+                    scope.totalApprovedLoans = data.totalFilteredRecords;
+                    scope.approvedLoans = data.pageItems;
+                });
+            }
+            scope.initPage();
+            //end
+
+
+            scope.routeTockyc = function () {
+                location.path('/ckycid');
+            }
+
+
+
+            // resourceFactory.bankRemittanceResource.get(function (data) {
+            // scope.approvedLoans = data;
+
+            //  });
+
+            //check or UnCheck all the ApprovedLoan
+            scope.checkAll = function (selectAll) {
+                if (selectAll) {
+                    for (var i = 0; i < scope.approvedLoans.length; i++) {
+                        selectedLoans.push(scope.approvedLoans[i].id);
+                        scope.approvedLoans[i].bankDetails = true;
+                    }
+
+                } else {
+                    for (var i = 0; i < scope.approvedLoans.length; i++) {
+                        selectedLoans = _.without(selectedLoans, scope.approvedLoans[i].id)
+                        scope.approvedLoans[i].bankDetails = false;
+
+                    }
+                }
+                selectedLoans = _.uniq(selectedLoans);
+            }
+            scope.selectedApproveLoan = function (id, bankDetails, selectedApproveLoan) {
+                for (var i = 0; i < scope.approvedLoans.length; i++) {
+                    if (scope.approvedLoans[i].id === id) {
+                        if (bankDetails === true) {
+                            scope.approvedLoans[i].bankDetails = true;
+                            selectedLoans.push(id);
+                            break;
+                        } else {
+                            scope.approvedLoans[i].bankDetails = false;
+                            selectedLoans = _.without(selectedLoans, scope.approvedLoans[i].id);
+                            break;
+                        }
+                    }
+                }
+
+                if (selectedLoans.length === 0) {
+                    scope.allBankDetails = false;
+                }
+
+                selectedLoans = _.uniq(selectedLoans);
+            };
+
+            scope.routeTo = function (id) {
+                location.path('/viewclient/' + id);
+            }
+            scope.refresh = function () {
+                route.reload();
+
+            }
+
+            scope.searchpan = function()
+            {
+                //scope.filter=scope.filterText;
+                resourceFactory.cKYCPanSearchedResource.search({ name: scope.filter, panno: scope.filter }, function (data) {
+                    scope.approvedLoans = data;
+                })
+            }
+
+            scope.routeToPageReload = function () {
+                location.path('/bankremittance/');
+            }
+            scope.downloadData = function () {
+
+                if (selectedLoans == "" || selectedLoans == undefined) {
+                    scope.selectedLoanErrorMsg = "Select any one Approved loan";
+                } else if (selectedLoans) {
+                    scope.selectedLoanErrorMsg = "";
+                    scope.sentForExecution = [];
+                    for (var i in selectedLoans) {
+                        for (var j in scope.approvedLoans) {
+                            if (scope.approvedLoans[j].id === selectedLoans[i]) {
+                                scope.sentForExecution.push(scope.approvedLoans[j].id);
+                            }
+                        }
+                    }
+
+                    console.log(this.formData, $rootScope);
+
+                    var URL = $rootScope.hostUrl + "/fineract-provider/api/v1/ckyc/download?tenantIdentifier=" + $rootScope.tenantIdentifier 
+                        + "&selectedLoans=" + selectedLoans;
+
+                        // $http({
+                        //     metod : "GET",
+                        //     url:$rootScope.hostUrl +"/fineract-provider/api/v1/ckyc/download",
+                        //     params : {selectedLoans : selectedLoans}
+                        // }).then(function success(response){
+
+                        //     scope.myRes = response.data;
+                        //     scope.statuscode = response.status;
+
+                        // }, function error(response){
+                        //     scope.myRes = response.statusText;
+                        // });
+                  
+                  
+                  
+                  window.open(URL, "_blank");
+                   
+
+                    //  route.reload();        
+                    // scope.approvedLoansPerPage=100;  
+
+                    // resourceFactory.bankRemittanceDownloadResource.download({selectedLoans,bankId:scope.bankIdDetails}, function (data) {
+
+                    //  });
+                    scope.refresh();
+                    scope.getResultsPage(1);
+                }
+
+
+
+            }
+
+            scope.generatedApprovedLoans = function (generatedApprovedLoans) {
+                if (generatedApprovedLoans) {
+
+                    scope.generatedapprovedLoansData = [];
+                    resourceFactory.cKYCGeneratedClientsResource.getAllCKYCClients({}, function (data) {
+                          scope.approvedLoans = data;
+                   });
+
+                } else {
+                    route.reload();
+                }
+            }
+            scope.searchedData = function (startDate, endDate) {
+                // this.formData.locale = scope.optlang.code;
+                if (startDate) {
+                    startDate = dateFilter(startDate, scope.df);
+                    scope.startDate = startDate;
+                }
+                if (endDate) {
+                    endDate = dateFilter(endDate, scope.df);
+                    scope.endDate = endDate;
+                }
+
+
+                if (scope.startDate == "" || scope.startDate == undefined) {
+                    scope.startDateErrorMsg = "Start Date Required";
+                } else {
+                    scope.startDateErrorMsg = "";
+                }
+
+                if (scope.endDate == "" || scope.endDate == undefined) {
+                    scope.endDateErrorMsg = "End Date Required";
+                } else if ((scope.startDate) && (scope.endDate)) {
+                    scope.endDateErrorMsg = "";
+                    resourceFactory.cKYCSearchedResource.search({ startDate: scope.startDate, endDate: scope.endDate }, function (data) {
+                        scope.approvedLoans = data;
+                    });
+                }
+
+            };
+
+        }
+    });
+    mifosX.ng.application.controller('CKYCController', ['$scope', 'ResourceFactory', '$location', 'dateFilter', '$route', '$rootScope', '$http', mifosX.controllers.CKYCController]).run(function ($log) {
+        $log.info("CKYCController initialized");
+    });
+}(mifosX.controllers || {}));
+;
+
+
+//add
+
+ (function (module) {
+    mifosX.controllers = _.extend(module, {
+        ckycresponseuploadController: function (scope, location, http, routeParams, API_VERSION, Upload, $rootScope) {
+            //scope.clientId = routeParams.clientId;
+            scope.onFileSelect = function (files) {
+                scope.formData.file = files[0];
+            };
+
+            scope.submit = function () {
+                Upload.upload({
+                    url: $rootScope.hostUrl + API_VERSION + '/ckyc',
+                    data: {  name: scope.formData.name,file: scope.formData.file },
+                }).then(function (data) {
+                    // to fix IE not refreshing the model
+                    if (!scope.$$phase) {
+                        scope.$apply();
+                    }
+                    location.path('/ckyc');
+                });
+            };
+        }
+    });
+    mifosX.ng.application.controller('ckycresponseuploadController', ['$scope', '$location', '$http', '$routeParams', 'API_VERSION', 'Upload', '$rootScope', mifosX.controllers.ckycresponseuploadController]).run(function ($log) {
+        $log.info("ckycresponseuploadController initialized");
+    });
+}(mifosX.controllers || {}));;
+
+
+
+//add
+
+
+

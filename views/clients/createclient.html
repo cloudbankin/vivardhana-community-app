@@ -321,7 +321,7 @@
                            <h3><strong>{{ 'label.input.address' | translate }}</strong>&nbsp;<a ng-click="addAddress()" ><i class="fa fa-plus" uib-tooltip="{{'label.button.addAddress' | translate}}"></i></a></h3>
                         </div>
                      </div>
-                     <div ng-repeat="addr in addressArray">
+                     <div ng-repeat="addr in addressArray track by [$index]">
                         <div class="form-group" >
                            <div class="control-label col-sm-2">
                               <label>{{ 'label.input.addressType' | translate }}<span class="required">*</span></label>
@@ -365,12 +365,23 @@
                               <input type="text"  name="addressline3" ng-model="addressArray[$index].addressLine3"  class="form-control">
                            </div>
                         </div>
-                        <div class="form-group" ng-show="city">
-                           <label class="control-label col-sm-2" >{{ 'label.input.city' | translate }}</label>
+                        <div class="form-group" ng-show="postalCode">
+                            <label class="control-label col-sm-2" >{{ 'label.input.postal_code' | translate }}</label>
+                            <div class="col-sm-3">
+                                <input type="text"  name="postal_code" ng-model="addressArray[$index].postalCode"  class="form-control" ng-change="postalCodefunction($index)" ng-minlength="6" ng-maxlength="6">
+                                <span style="color:#ff4500;" ng-show="createclientform.postal_code.$error.minlength">  Postal Code must have 6 digits</span> 
+                                <form-validate valattributeform="createclientform" valattribute="postal_code"/> 
+                         <!--       <select chosen="stateLists" id="postal_code" ng-model="addressArray[$index].postalCode"  class="form-control" ng-change="postalCodefunction($index)"
+                             ng-options="stateList.pincode  as stateList.pincode for stateList in stateLists track by stateList.id"
+                            ></select> --> 
+                            </div>
+                         </div>
+                    <!--    <div class="form-group" ng-show="city">
+                           <label class="control-label col-sm-2" >{{ 'District' }}</label>
                            <div class="col-sm-3">
-                              <input type="text" name="city" ng-model="addressArray[$index].city"  class="form-control">
+                              <input type="text" name="city" ng-model="addressArray[$index].city"  class="form-control" readonly> 
                            </div>
-                        </div>
+                        </div> -->
                         <div class="form-group" ng-show="townVillage">
                            <label class="control-label col-sm-2" >{{ 'label.input.town_village' | translate }}</label>
                            <div class="col-sm-3">
@@ -384,15 +395,18 @@
                            </div>
                         </div>
                         <div class="form-group" ng-show="stateProvinceId">
-                           <div class="control-label col-sm-2">
-                              <label>{{ 'label.input.state_province' | translate }}</label>
-                           </div>
-                           <div class="col-sm-3" >
-                              <select chosen="stateOptions"  ng-model="addressArray[$index].stateProvinceId"  class="form-control"
-                                 ng-options="stateOption.id as stateOption.name for stateOption in stateOptions track by stateOption.id"
-                                 value="stateProvinceId"></select>
-                           </div>
-                        </div>
+                            <div class="control-label col-sm-2">
+                               <label>{{ 'label.input.state_province' | translate }}</label>
+                            </div>
+                            <div class="col-sm-3" >
+                               <!--  <select chosen="stateOptions"  ng-model="addressArray[$index].stateProvinceId"  class="form-control"
+                                  ng-options="stateOption.id as stateOption.name for stateOption in stateOptions track by stateOption.id"
+                                  value="stateProvinceId"></select>  -->
+                                  <input type="text"  name="stateProvinceId" ng-model="addressArray[$index].stateProvinceId" ng-minlength="2" class="form-control" readonly  required>
+                                  <span style="color:#ff4500;" ng-show="createclientform.postal_code.$dirty && createclientform.stateProvinceId.$error.required"> Provide valid Postal Code </span>
+                                  <form-validate valattributeform="createclientform" valattribute="stateProvinceId"/> 
+                            </div>
+                         </div>
                         <div>
                         </div>
                         <div class="form-group" ng-show="countryId">
@@ -400,17 +414,18 @@
                               <label>{{ 'label.input.country' | translate }}</label>
                            </div>
                            <div class="col-sm-3" >
-                              <select chosen="countryOptions"  ng-model="addressArray[$index].countryId"  class="form-control"
+                             <!--  <input type="text"  name="countryId" ng-model="addressArray[$index].countryId" value="India" class="form-control" > -->
+                               <select chosen="countryOptions"  ng-model="addressArray[$index].countryId"  class="form-control"
                                  ng-options="countryOption.id as countryOption.name for countryOption in countryOptions track by countryOption.id"
-                                 value="countryId"></select>
+                                 value="countryId"></select> 
                            </div>
                         </div>
-                        <div class="form-group" ng-show="postalCode">
+                        <!-- <div class="form-group" ng-show="postalCode">
                            <label class="control-label col-sm-2" >{{ 'label.input.postal_code' | translate }}</label>
                            <div class="col-sm-3">
                               <input type="text"  name="postal_code" ng-model="addressArray[$index].postalCode"  class="form-control">
                            </div>
-                        </div>
+                        </div> -->
                         <div class="form-group" ng-show="latitude">
                            <label class="control-label col-sm-2" >{{ 'label.input.latitude' | translate }}</label>
                            <div class="col-sm-3">
@@ -458,8 +473,9 @@
 		            </label>
 		            <div class="col-sm-3">
 		               <input ng-show="fieldType(columnHeader.columnDisplayType) == 'TEXT'" type="text"
-                          ng-model="formData.datatables[datatables.indexOf(datatable)].data[columnHeader.columnName]" 
-                          ng-disabled="columnHeader.columnName === 'Age'" class="form-control"/>
+                          ng-model="formData.datatables[datatables.indexOf(datatable)].data[columnHeader.columnName]" class="form-control"
+                          ng-disabled="columnHeader.columnName === 'Age'" />
+                         
 		               <input ng-show="fieldType(columnHeader.columnDisplayType) == 'DATE'" type="text"
 		                  datepicker-pop="dd MMMM yyyy" ng-model="formDat.datatables[datatables.indexOf(datatable)].data[columnHeader.columnName]"
 		                  is-open="opened{{$index}}" class="form-control"/>
