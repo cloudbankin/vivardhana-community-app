@@ -4286,5 +4286,7 @@
     "error.bankRemittance.invalid.start.date":"Start date must be past and current date ",
     "error.bankRemittance.invalid.end.date.future.exception":"End date must be after the start date and it cannot be future date",
     "error.bankRemittance.invalid.end.date":"End date must be after the start date",
-    "error.msg.bankRemittance.id.invalid":"Selected loan already marked in another bank"
+    "error.msg.bankRemittance.id.invalid":"Selected loan already marked in another bank",
+    "validation.msg.nominee.invalid.aadhaar.number":"Nominee's Aadhaar Number is invalid",
+    "validation.msg.client.invalid.aadhaar.number":"Client's Aadhaar Number is invalid"
 }
