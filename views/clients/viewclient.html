@@ -626,10 +626,10 @@
 							<tr class="graybg">
 								<th class="graybg"> {{address.addressType}}</th>
 								<td>
-									<button ng-click="ChangeAddressStatus(address.client_id,address.isActive,address.addressId)" data-ng-hide="address.isActive" class="btn btn-primary">
+									<button ng-click="ChangeAddressStatus(address.client_id,address.isActive,address.addressId,address.postalCode)" data-ng-hide="address.isActive" class="btn btn-primary">
 										{{"label.button.enable" | translate}}
 									</button>
-									<button ng-click="ChangeAddressStatus(address.client_id,address.isActive,address.addressId)"  data-ng-show="address.isActive" class="btn btn-primary">
+									<button ng-click="ChangeAddressStatus(address.client_id,address.isActive,address.addressId,address.postalCode)"  data-ng-show="address.isActive" class="btn btn-primary">
 										{{"label.button.disable" | translate}}
 									</button>
 									<button class="btn btn-primary pull-right" ng-click="routeToEdit(address.addressTypeId,address.addressId)"><i class="icon-plus icon-white"></i>{{'label.button.edit' | translate}}</button>

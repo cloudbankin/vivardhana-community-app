@@ -3806,7 +3806,7 @@
                     resourceFactory.postalcode1.addressdetails({pincode:scope.pincode},function(data)
             {
                 scope.addressArray[i].stateProvinceId ="";
-                scope.addressArray[i].stateProvinceId =data[0].state;
+                scope.addressArray[i].stateProvinceId =data[0].state_id;
                 scope.addressArray[i].city = data[0].district;
                 scope.addressArray[i].countryId =32;
             });
@@ -4485,11 +4485,12 @@
                 location.path('/address/'+ routeParams.id);
             }
 
-            scope.ChangeAddressStatus=function(id,status,addressId)
+            scope.ChangeAddressStatus=function(id,status,addressId,postalCode)
             {
 
                 formdata.isActive=!status
                 formdata.addressId=addressId
+                formdata.postalCode=postalCode
                 resourceFactory.clientAddress.put({clientId:id},formdata,function(data)
                 {
                     route.reload();
@@ -6153,7 +6154,7 @@
                     resourceFactory.postalcode1.addressdetails({pincode:$scope.pincode},function(data)
             {
                 $scope.formData.stateProvinceId ="";
-                $scope.formData.stateProvinceId =data[0].state;
+                $scope.formData.stateProvinceId =data[0].state_id;
                 $scope.formData.city = data[0].district;
                 $scope.formData.countryId=32;
             });
@@ -6255,7 +6256,7 @@
                 resourceFactory.postalcode1.addressdetails({pincode:$scope.pincode},function(data)
                 {
                     $scope.formData.stateProvinceId ="";
-                    $scope.formData.stateProvinceId =data[0].state;
+                    $scope.formData.stateProvinceId =data[0].state_id;
                     $scope.formData.city = data[0].district;
                 });
                 }
@@ -6305,7 +6306,7 @@
                             }
                             if(data[i].stateProvinceId&&$scope.stateProvinceId)
                             {
-                                $scope.formData.stateProvinceId=data[i].stateProvinceId;
+                            	$scope.formData.stateProvinceId=data[i].stateProvinceId;
                             }
                             if(data[i].countryId&&$scope.countryId)
                             {

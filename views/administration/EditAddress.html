@@ -113,13 +113,16 @@
 					<label>{{ 'label.input.state_province' | translate }}</label>
 				</div>
 				<div class="col-sm-3">
-					<!-- <select class="form-control" id="stateOption" name="stateOption"
+					  <select class="form-control" id="stateOption" name="stateOption"
 						ng-model="formData.stateProvinceId"
 						ng-options="stateOption.id as stateOption.name for stateOption in stateOptions"
-						value="{{stateOption.id}}"></select> -->
-						<input type="text" name="stateProvinceId" ng-model="formData.stateProvinceId"  class="form-control" readonly required>
+						value="{{stateOption.id}}" ng-disabled="formData.stateProvinceId"></select>  
+						<!-- <select  id="stateOption" ng-model="formData.stateProvinceId"  class="form-control"
+                            ng-options="stateOption.id as stateOption.name for stateOption in stateOptions "
+                            value="{{stateOption.id}}" ng-disabled=true></select>  -->
+						<!-- <input type="text" name="stateProvinceId" ng-model="formData.stateProvinceId"  class="form-control" readonly required>
 						<span style="color:#ff4500;" ng-show="FieldConfiguration.postal_code.$dirty && FieldConfiguration.stateProvinceId.$error.required"> Provide valid Postal Code </span>
-                     <form-validate valattributeform="FieldConfiguration" valattribute="stateProvinceId"/>
+                     <form-validate valattributeform="FieldConfiguration" valattribute="stateProvinceId"/> -->
 				</div>
 			</div>
 			<div></div>

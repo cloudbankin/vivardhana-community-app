@@ -402,9 +402,12 @@
                                <!--  <select chosen="stateOptions"  ng-model="addressArray[$index].stateProvinceId"  class="form-control"
                                   ng-options="stateOption.id as stateOption.name for stateOption in stateOptions track by stateOption.id"
                                   value="stateProvinceId"></select>  -->
-                                  <input type="text"  name="stateProvinceId" ng-model="addressArray[$index].stateProvinceId" ng-minlength="2" class="form-control" readonly  required>
+                                  <select  id="stateOption" ng-model="addressArray[$index].stateProvinceId"  class="form-control"
+                            ng-options="stateOption.id as stateOption.name for stateOption in stateOptions "
+                            value="stateProvinceId" ng-disabled=true></select> 
+                                  <!-- <input type="text"  name="stateProvinceId" ng-model="addressArray[$index].stateProvinceId" ng-minlength="2" class="form-control" readonly  required>
                                   <span style="color:#ff4500;" ng-show="createclientform.postal_code.$dirty && createclientform.stateProvinceId.$error.required"> Provide valid Postal Code </span>
-                                  <form-validate valattributeform="createclientform" valattribute="stateProvinceId"/> 
+                                  <form-validate valattributeform="createclientform" valattribute="stateProvinceId"/>  -->
                             </div>
                          </div>
                         <div>
