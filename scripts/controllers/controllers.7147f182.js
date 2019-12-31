@@ -3668,6 +3668,7 @@
             scope.formDat.datatables = [];
             scope.tf = "HH:mm";
             scope.clientId = routeParams.clientId;
+            scope.errorPresent = false;
 
             var requestParams = {staffInSelectedOfficeOnly:true};
             if (routeParams.groupId) {
@@ -3805,10 +3806,21 @@
                     scope.pincode=use;
                     resourceFactory.postalcode1.addressdetails({pincode:scope.pincode},function(data)
             {
-                scope.addressArray[i].stateProvinceId ="";
+               /* scope.addressArray[i].stateProvinceId ="";
                 scope.addressArray[i].stateProvinceId =data[0].state_id;
                 scope.addressArray[i].city = data[0].district;
-                scope.addressArray[i].countryId =32;
+                scope.addressArray[i].countryId =32;*/
+                    	if(data.length == 1){  
+                            scope.errorPresent = false;
+                            scope.addressArray[i].stateProvinceId ="";
+                            scope.addressArray[i].stateProvinceId =data[0].state_id;
+                            scope.addressArray[i].city = data[0].district;
+                            scope.addressArray[i].countryId =32;
+                            }else{
+                            	scope.addressArray[i].stateProvinceId = undefined;
+                            	scope.addressArray[i].city = undefined;
+                            	scope.errorPresent = true;
+                            }
             });
                 }
             }
@@ -6086,7 +6098,7 @@
         AddressFormController: function ($scope, resourceFactory, routeParams, location) {
 
             $scope.formData={};
-            $scope.addressTypes=[];
+            $scope.addressTypes=['Select Address Type'];
             $scope.countryOptions=[];
             $scope.stateOptions=[];
             $scope.addressTypeId={};
@@ -6099,6 +6111,8 @@
                 $scope.stateOptions=data.stateProvinceIdOptions;
             }
             )
+            
+            $scope.errorPresent = false;
 
 
             resourceFactory.addressFieldConfiguration.get({entity:entityname},function(data){
@@ -6123,6 +6137,7 @@
 
             $scope.isEditRequired=function(addType)
             {
+            	console.log(addType);
                 resourceFactory.clientAddress.get({type:addType,clientId:routeParams.id,status:true},function(data)
                 {
 
@@ -6153,10 +6168,19 @@
                     $scope.pincode=$scope.formData.postalCode;
                     resourceFactory.postalcode1.addressdetails({pincode:$scope.pincode},function(data)
             {
+                if(data.length == 1){  
+                $scope.errorPresent = false;
+                $scope.editable=false;
                 $scope.formData.stateProvinceId ="";
                 $scope.formData.stateProvinceId =data[0].state_id;
                 $scope.formData.city = data[0].district;
                 $scope.formData.countryId=32;
+                }else{
+                	$scope.formData.stateProvinceId = undefined;
+                	$scope.formData.city = undefined;
+                	$scope.errorPresent = true;
+                	$scope.editable=true;
+                }
             });
                 }
             }
@@ -6206,6 +6230,7 @@
             $scope.editable=false;
             clientId=routeParams.clientId;
             addresstypid=routeParams.addrType;
+            $scope.errorPresent = false;
 
 
             isActive={};
@@ -6255,9 +6280,21 @@
                 $scope.pincode=$scope.formData.postalCode;
                 resourceFactory.postalcode1.addressdetails({pincode:$scope.pincode},function(data)
                 {
+                    /*$scope.formData.stateProvinceId ="";
+                    $scope.formData.stateProvinceId =data[0].state_id;
+                    $scope.formData.city = data[0].district;*/
+                	if(data.length == 1){  
+                    $scope.errorPresent = false;
+                    $scope.editable=false;
                     $scope.formData.stateProvinceId ="";
                     $scope.formData.stateProvinceId =data[0].state_id;
                     $scope.formData.city = data[0].district;
+                    }else{
+                    	$scope.formData.stateProvinceId = undefined;
+                    	$scope.formData.city = undefined;
+                    	$scope.errorPresent = true;
+                    	$scope.editable=true;
+                    }
                 });
                 }
                 }
@@ -6271,7 +6308,7 @@
 
 
 
-                        $scope.editable=true;
+                        /*$scope.editable=true;*/
                     for(var i=0;i<data.length;i++)
                     {
                         if(data[i].addressId==addressId)

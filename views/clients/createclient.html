@@ -327,9 +327,11 @@
                               <label>{{ 'label.input.addressType' | translate }}<span class="required">*</span></label>
                            </div>
                            <div class="col-sm-3"  >
-                              <select chosen="addressTypes" name="addressType" ng-model="addressArray[$index].addressTypeId"  class="form-control"
+                              <select name="addressType" ng-model="addressArray[$index].addressTypeId"  class="form-control"
                                  ng-options="addressType.id as addressType.name for addressType in addressTypes track by addressType.id"
-                                 value="addressTypeId" required late-validate></select>
+                                 value="addressTypeId" required late-validate>
+                                 <option value="" selected disabled>Select Address Type</option>
+                                 </select>
                            </div>
                            <div class = "col-sm-2">
                               <form-validate valattributeform="createclientform" valattribute="addressType"/>
@@ -405,9 +407,9 @@
                                   <select  id="stateOption" ng-model="addressArray[$index].stateProvinceId"  class="form-control"
                             ng-options="stateOption.id as stateOption.name for stateOption in stateOptions "
                             value="stateProvinceId" ng-disabled=true></select> 
-                                  <!-- <input type="text"  name="stateProvinceId" ng-model="addressArray[$index].stateProvinceId" ng-minlength="2" class="form-control" readonly  required>
-                                  <span style="color:#ff4500;" ng-show="createclientform.postal_code.$dirty && createclientform.stateProvinceId.$error.required"> Provide valid Postal Code </span>
-                                  <form-validate valattributeform="createclientform" valattribute="stateProvinceId"/>  -->
+                                  <!-- <input type="text"  name="stateProvinceId" ng-model="addressArray[$index].stateProvinceId" ng-minlength="2" class="form-control" readonly  required> -->
+                                  <span style="color:#ff4500;" ng-show="errorPresent"> Provide valid Postal Code </span>
+                                  <form-validate valattributeform="createclientform" valattribute="stateProvinceId"/>  
                             </div>
                          </div>
                         <div>

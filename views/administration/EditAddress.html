@@ -78,7 +78,7 @@
 				<div class="col-sm-3">
 					<input type="text" id="city" name="city" ng-model="formData.city"
 						class="form-control" ng-minlength="2" required>
-						<span style="color:#ff4500;" ng-show="FieldConfiguration.postal_code.$dirty &&  FieldConfiguration.city.$error.required"> Provide valid Postal Code </span>
+						<!-- <span style="color:#ff4500;" ng-show="FieldConfiguration.postal_code.$dirty &&  FieldConfiguration.city.$error.required"> Provide valid Postal Code </span> -->
                      <form-validate valattributeform="FieldConfiguration" valattribute="city"/>
 				</div>
 
@@ -116,13 +116,14 @@
 					  <select class="form-control" id="stateOption" name="stateOption"
 						ng-model="formData.stateProvinceId"
 						ng-options="stateOption.id as stateOption.name for stateOption in stateOptions"
-						value="{{stateOption.id}}" ng-disabled="formData.stateProvinceId"></select>  
+						value="{{stateOption.id}}" ng-disabled=true></select>  
 						<!-- <select  id="stateOption" ng-model="formData.stateProvinceId"  class="form-control"
                             ng-options="stateOption.id as stateOption.name for stateOption in stateOptions "
                             value="{{stateOption.id}}" ng-disabled=true></select>  -->
 						<!-- <input type="text" name="stateProvinceId" ng-model="formData.stateProvinceId"  class="form-control" readonly required>
-						<span style="color:#ff4500;" ng-show="FieldConfiguration.postal_code.$dirty && FieldConfiguration.stateProvinceId.$error.required"> Provide valid Postal Code </span>
-                     <form-validate valattributeform="FieldConfiguration" valattribute="stateProvinceId"/> -->
+						<span style="color:#ff4500;" ng-show="FieldConfiguration.postal_code.$dirty && FieldConfiguration.stateProvinceId.$error.required"> Provide valid Postal Code </span> -->
+                     <span style="color:#ff4500;" ng-show="errorPresent">  Provide valid Postal Code </span>
+                     <form-validate valattributeform="FieldConfiguration" valattribute="stateProvinceId"/> 
 				</div>
 			</div>
 			<div></div>
@@ -136,7 +137,7 @@
 					<select class="form-control" id="countryOption"
 						name="countryOption" ng-model="formData.countryId"
 						ng-options="countryOption.id as countryOption.name for countryOption in countryOptions"
-						value="{{countryOption.id}}" ng-disabled="formData.countryId"></select>
+						value="{{countryOption.id}}"></select>
 				</div>
 			</div>
 
@@ -189,7 +190,7 @@
                     'label.button.save' | translate }}
                 </button>-->
 
-				<button id="edit" ng-click="updateaddress()" class="btn btn-primary">{{
+				<button id="edit" ng-click="updateaddress()" ng-disabled="editable" class="btn btn-primary">{{
 					'label.button.edit' | translate }}</button>
 
 			</div>
