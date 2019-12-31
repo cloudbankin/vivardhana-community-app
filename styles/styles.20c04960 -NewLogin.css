@@ -8935,3 +8935,249 @@ height: 1800px;
 /*@media (max-width: 415px) {
 
 }*/
+   /* Styles for fusion chart dashboard */
+
+.officealgin{
+  width:35%;
+}
+
+.allignSummary{
+  padding-left: 0px;
+  width: 17.5%;
+}
+
+.loanDisbursedTextAlign{
+    padding-left: 10px;
+    padding-top: 10px;
+    font-size: 12px;
+    position: relative;
+    left: 18%;
+}
+
+.allignCollections{
+  padding-left: 0px;
+  width: 23.6%; 
+}
+
+.allignOverdue{
+  padding-left: 0px;
+  padding-right: 0px;
+  width: 23.6%; 
+}
+
+.collectionTextAlign{
+  padding-left: 10px;
+}
+
+.panelAlign{
+  height: 108px;
+  background-color: #F1F1F1;
+  color: #0091D5;
+}
+
+.colorPanel{
+  background-color: #5d9cec;
+  color: #FFF; 
+  height: 108px;
+  border-radius: 0px;
+  border: 0px;
+}
+
+.loanDisbursedValueAlign{
+  padding-left: 60px; 
+  padding-top: 20px; 
+  font-size: 24px;
+}
+
+.loanAmountTextAlign{
+  padding-top: 10px;
+  padding-left: 10px;
+  font-size: 12px;
+  position: relative;
+  left: 11%;
+}
+
+.loanAmountValueAlign{
+  font-size: 24px;
+  padding-top: 21px;
+  padding-left: 20px;
+}
+
+.earningsTextAlign{
+  padding-top: 10px;
+  padding-left: 10px;
+  font-size: 12px;
+  position: relative;
+  left: 39%;  
+}
+
+.earningsValueAlign{
+  padding-top: 22px;
+  font-size: 24px;
+  padding-left: 27px;
+}
+
+.collectionsTextAlign{
+  padding-left: 10px; 
+  padding-top: 10px; 
+  padding-bottom: 10px;
+  font-size: 14px;
+  position: relative;
+  left: 28%;
+}
+
+.collectionsValueAlign{
+  padding-left: 10px;
+}
+
+.principalTextAlign{
+  padding-left: 10px;
+  font-size: 12px;  
+}
+
+.interestTextAlign{
+  font-size: 12px;  
+  position: relative;
+  left: 26%;
+}
+
+.interestTextAlign1{
+  font-size: 12px;  
+  position: relative;
+  left: 22%;
+}
+
+.principalValueAlign{
+   padding-bottom: 10px; 
+   font-size: 20px;
+   padding-top: 7px;
+   padding-right: 35px;
+}
+
+.interestValueAlign{
+  padding-bottom: 10px; 
+  font-size: 20px;
+  padding-top: 7px;
+  position: relative;
+  left: 4%;
+}
+
+.interestValueAlign1{
+  padding-bottom: 10px; 
+  font-size: 20px;
+  padding-top: 7px;
+  position: relative;
+  left: 2%;
+}
+
+
+.overdueTextAlign{
+  padding-left: 10px; 
+  padding-top: 10px; 
+  padding-bottom: 10px;
+  font-size: 14px;
+  position: relative;
+  left: 28%;
+}
+
+.clientAlign{
+    width: 48.5%;
+}
+
+.loanAlign{
+    width: 51.5%;
+}
+
+.dollarAlign{
+  font-size: 115%;
+}
+
+.textCentreAlign{
+  text-align: center;
+  font-size: 26px;
+}
+
+.logoAlign{
+  height: 108px;
+  padding-right: 0px;
+  padding-left: 0px;
+  background-color: #2f80e7;
+  width: 5.4%;
+}
+
+.logoAlign1{
+  height: 108px;
+  padding-right: 0px;
+  padding-left: 0px;
+  background-color: #2f80e7;
+  width: 5.4%;
+}
+
+.colorPanel1{
+  background-color: #5d9cec;
+  color: #FFF; 
+  height: 108px;
+  border-radius: 0px;
+  border: 0px;
+}
+
+.logoAlign2{
+  height: 108px;
+  padding-right: 0px;
+  padding-left: 0px;
+  background-color: #564aa3;
+  width: 5.4%;
+}
+
+.colorPanel2{
+  background-color: #7266ba;
+  color: #FFF; 
+  height: 108px;
+  border-radius: 0px;
+  border: 0px;
+}
+
+.logoAlign3{
+  height: 108px;
+  padding-right: 0px;
+  padding-left: 0px;
+  background-color: #2b957a;
+  width: 5.4%;
+}
+
+.colorPanel3{
+  background-color: #37bc9b;
+  color: #FFF; 
+  height: 108px;
+  border-radius: 0px;
+  border: 0px;
+}
+
+.hrColor{
+  border-color: #7266ba;
+}
+
+.agingBoxAlign{
+  height: 166px;
+}
+
+.designAgingBox1{
+  height: 146px; 
+  padding: 10px 10px 10px 10px; 
+  background-color: #5d9cec;
+  color: #FFF;
+}
+
+.designAgingBox2{
+  height: 146px; 
+  padding: 10px 10px 10px 10px; 
+  background-color: #7266ba;
+  color: #FFF;
+}
+
+.designAgingBox3{
+  height: 146px; 
+  padding: 10px 10px 10px 10px; 
+  background-color: #37bc9b;
+  color: #FFF;
+}

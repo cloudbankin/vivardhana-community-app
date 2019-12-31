@@ -1,141 +1,592 @@
-<div class="content-container">
-	<div id="expertsearch" class="card well" data-ng-controller="RichDashboard">
-    <h3 class="paddedleft"><strong>{{'label.heading.dashboard' | translate}}</strong>
-    	<div class="btn-group pull-right">
-	        <label class="btn btn-primary" ng-click="switch()" ng-model="dashModel" btn-radio="'dashboard'">{{'label.heading.home' | translate}}</label>
-	        <label class="btn btn-primary" ng-model="dashModel" btn-radio="'rich-dashboard'">{{'label.heading.dashboard' | translate}}</label>
-	    </div>
-    </h3>
-    <hr/>
-    <div id="home" class="row">
-    	<div class="col-md-4">
-	    	<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title"><i class="fa fa-bolt"></i>{{'label.heading.recentactivities' | translate}}</h3>
-				</div>
-				<div class="panel-body">
-					<div class="list-group">
-					  <a href="#{{recent}}" data-ng-repeat="recent in recents" class="list-group-item">
-					  	{{recent | UrlToString | translate}}</a>
-					</div>
-				</div>
-		    </div>
-	    </div>
-	    <div class="col-md-4">
-	    	<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title"><i class="fa fa-laptop"></i>{{'label.heading.frequentactivities' | translate}}</h3>
-				</div>
-				<div class="panel-body">
-					<div class="list-group">
-					  <a href="#{{freq}}" data-ng-repeat="freq in frequent" class="list-group-item">
-					  	{{freq | UrlToString | translate}}</a>
-					</div>
-				</div>
-		    </div>
-	    </div>
-	    <div class="col-sm-4 col-md-4">
-	    	<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">{{'label.heading.amountdisbursedfortoday' | translate}}
-						<select class="form-control input-small-tooltip pull-right"
-		                        data-ng-options="office.id as office.name for office in offices" name="office2"
-		                        data-ng-change="getDisbursementOffice()" value="{{office.id}}" id="office2"
-		                        ng-model="officeIdDisbursed">
-		                    <option value="">--{{'label.menu.office' | translate}}--</option>
-		                </select>
-					</h3>
-				</div>
-				<div class="panel-body">
-					<h3 class="required panel-error" data-ng-show="showDisbursementerror">{{'label.nodata' | translate}}</h3>
-					<div data-ng-show="!showDisbursementerror" style="margin:-42px 0 0;height: 242px;">
-	                    <nvd3-pie-chart
-	                            data="disbursedData"
-	                            id="piechart2"
-	                            width="425"
-	                            height="375"
-	                            x="xFunction()"
-	                            y="yFunction()"
-	                            tooltips="true"
-	                            donut="true"
-	                            donutRatio=".015"
-	                            color="colorFunctionPie()">
-	                        <svg height="200"></svg>
-	                    </nvd3-pie-chart>
-	                </div>
-				</div>
-		    </div>
-        </div>
-    </div>
-   	<div class="row">
-		<div class="col-sm-8 col-md-8">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">{{'label.heading.clienttrendsfor' | translate}} {{bOfficeName}} ({{chartType}})
-						<select class="form-control input-small-tooltip pull-right" name="office1" ng-change="getDailyData()"
-			                     id="office1" ng-model="officeId"
-			                     data-ng-options="office.id as office.name for office in offices" value="{{office.id}}">
-			                 <option value="">--{{'label.menu.office' | translate}}--</option>
-			             </select>
-					</h3>
-				</div>
-				<div class="panel-body">
-					<div>
-			             <button type="button" class="btn-silver btn-tooltip" data-ng-click="getWeeklyData()"><i
-			                     class="fa fa-table"></i>{{'label.button.week' | translate}}
-			             </button>
-			             <button type="button" class="btn-silver btn-tooltip" data-ng-click="getMonthlyData()"><i
-			                     class="fa fa-table"></i>{{'label.button.month' | translate}}
-			             </button>
-			             <button type="button" class="btn-silver btn-tooltip" data-ng-click="getDailyData()"><i
-			                     class="fa fa-table"></i>{{'label.button.day' | translate}}
-			             </button>
-			        </div>
-					<div style="height:250px;">
-			            <nvd3-multi-bar-chart
-			                     data="BarData"
-			                     id="barchart"
-			                     width="800"
-			                     height="380"
-			                     color="colorFunction()"
-			                     showLegend="true">
-			                 <svg></svg>
-			             </nvd3-multi-bar-chart>
-			        </div>
-				</div>
-		    </div>
-		</div>
-		<div class="col-sm-4 col-md-4">
-	    	<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">{{'label.heading.amontcollectedfortoday' | translate}}
-						<select class="form-control input-small-tooltip pull-right" name="office1" ng-change="getCollectionOffice()"
-				                id="office1" ng-model="officeIdCollection"
-				                data-ng-options="office.id as office.name for office in offices" value="{{office.id}}">
-				            <option value="">--{{'label.menu.office' | translate}}--</option>
-				        </select>
-					</h3>
-				</div>
-				<div class="panel-body" style="min-height:310px;">
-		        	<h3 class="required panel-error" data-ng-show="showCollectionerror">{{'label.nodata' | translate}}</h3>
-					<div data-ng-show="!showCollectionerror" style="margin:-30px 40px 0;height: 310px;">
-			            <nvd3-pie-chart
-			                    data="collectedData"
-			                    id="piechart1"
-			                    width="380"
-			                    height="420"
-			                    x="xFunction()"
-			                    y="yFunction()"
-			                    tooltips="true"
-			                    donut="true"
-			                    donutRatio=".015"
-			                    color="colorFunctionPie()">
-			                <svg height="230"></svg>
-			            </nvd3-pie-chart>
-			        </div>
-				</div>
-		    </div>
-        </div>
-	</div>
-	</div>
+<div>
+   <style>
+       .padding-15 {
+           padding: 15px;
+       }
+       
+       .padding-10 {
+           padding: 10px;
+       }
+       
+       .panel-header-icons {
+           padding: 10px;
+           padding-top: 0px;
+       }
+       
+       .margin-top-60 {
+           margin-top: 60px;
+       }
+       
+       .panel-heading {
+           font-size: 25px;
+           font-weight: bold;
+       }
+       
+       .card {
+           box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+           transition: 0.3s;
+           border-radius: 10px;
+           /* height: 110px !important; */
+       }
+       
+       .card:hover {
+           box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+       }
+       
+       .panel-default {
+           padding: 10px;
+       }
+       
+       .content-body {
+           /* height: 300px; */
+       }
+   </style>
+
+   <div id="expertsearch" class="card well" data-ng-controller="RichDashboard">
+       <! <nvd3  options="options" data="data"></nvd3> 
+
+       <h3 class="paddedleft"><strong>&nbsp;</strong>
+     <div class="btn-group pull-right">
+       <label class="btn btn-primary" ng-click="switch()" ng-model="dashModel" btn-radio="'dashboard'">{{'label.heading.home' | translate}}</label>
+       <label class="btn btn-primary" ng-model="dashModel" btn-radio="'rich-dashboard'">{{'label.heading.dashboard' | translate}}</label>
+     </div>
+   </h3>
+      
+       <! Begin Charts>
+       <div>
+
+           <div class="container margin-top-60">
+               <! Start portfolio>
+               <div class="row">
+                   <div class="col-lg-12">
+                       <div class="panel-heading text-center">
+                           Portfolio Summary
+                       </div>
+                       <div class="panel panel-default">
+
+                           <! Filter>
+                           <div class="container row padding-15">
+                               <div class="col-lg-2">
+                                   <select ng-options="item.value as item.name for item in dashboardData[portfolioID].filterData.offices" ng-change="onFilterDropdownChanged(portfolioID,'offices')" ng-model="dashboardData[portfolioID].selectedoffices" class="form-control">
+                                       <option value=""> Select Office </option>
+                                   </select>
+                               </div>
+                               <div class="col-lg-3">
+                                   <select ng-options="item.value as item.name for item in dashboardData[portfolioID].filterData.staffs" ng-change="onFilterDropdownChanged(portfolioID,'staffs')" ng-model="dashboardData[portfolioID].selectedstaffs" class="form-control">
+                                       <option value="">Select Loan Officer</option>
+                                   </select>
+                               </div>
+                               <div class="col-lg-2" ng-if="isMFI">
+                                   <select ng-options="item.value as item.name for item in dashboardData[portfolioID].filterData.centers" ng-change="onFilterDropdownChanged(portfolioID,'centers')" ng-model="dashboardData[portfolioID].selectedcenters" class="form-control">
+                                       <option value=""> Select Centers </option>
+                                   </select>
+                               </div>
+                               <div class="col-lg-2" ng-if="isMFI">
+                                   <select ng-options="item.value as item.name for item in dashboardData[portfolioID].filterData.groups" ng-change="onFilterDropdownChanged(portfolioID,'groups')" ng-model="dashboardData[portfolioID].selectedgroups" class="form-control">
+                                       <option value=""> Select Groups </option>
+                                   </select>
+                               </div>
+                               <div class="col-lg-2">
+                                   <select ng-options="item.value as item.name for item in dashboardData[portfolioID].filterData.products" ng-change="onFilterDropdownChanged(portfolioID,'products')" ng-model="dashboardData[portfolioID].selectedproducts" class="form-control">
+                                       <option value=""> Select Products </option>
+                                   </select>
+                               </div>
+                               <!--<div class="col-lg-12 padding-10">
+                                   <div class="col-lg-2">
+                                       Date range
+                                   </div>
+                                   <div class="col-lg-3">
+                                       <input id="fromDate" type="text" name="fromDate" datepicker-pop="dd MMMM yyyy" ng-model="dashboardData[portfolioID].selectedFromDate" is-open="opened1" min="'2000-01-01'" max="restrictDate" class="form-control">
+                                   </div>
+                                   <div class="col-lg-1">
+                                       To
+                                   </div>
+                                   <div class="col-lg-3">
+                                       <input id="toDate" type="text" name="toDate" datepicker-pop="dd MMMM yyyy" ng-model="dashboardData[portfolioID].selectedToDate" is-open="opened1" min="'2000-01-01'" max="restrictDate" class="form-control">
+                                   </div>
+                                   <div class="btn-group">
+                                      <button class="btn btn-primary" ng-click="onDateFilter(portfolioID,'date')"> Filter </button>
+                                   </div>-->
+                               </div>
+                           </div>
+                           <!./Filter>
+                           <div class="row padding-10">
+                               <div class="col-lg-2 ">
+                                   <div class="card colorPanel1">
+                                       <div class="row text-center padding-10">
+                                           <p>Loans Disbursed</p>
+                                           <h4><b>{{dashboardData[portfolioID].totalLoanDisbursed | number}}</b></h4>
+                                       </div>
+                                   </div>
+                               </div>
+                               <div class="col-lg-2">
+                                   <div class="card colorPanel2">
+                                       <div class="row text-center padding-10">
+                                           <p>Amount Disbursed</p>
+                                           <h4><b>{{dashboardData[portfolioID].totalAmountDisbursed | number}}</b></h4>
+                                       </div>
+                                   </div>
+                               </div>
+                               <div class="col-lg-2 ">
+                                   <div class="card colorPanel3">
+                                       <div class="row text-center padding-10">
+                                           <p>Earnings</p>
+                                           <h4><b>{{dashboardData[portfolioID].totalEarnings | number}}</b></h4>
+                                       </div>
+                                   </div>
+                               </div>
+                               <div class="col-lg-3 ">
+                                   <div class="card colorPanel1">
+                                       <div class="row text-center padding-10">
+                                           <p>Collections</p>
+                                           <div class="col-lg-6">
+                                               Principal
+                                               <h4><b>{{dashboardData[portfolioID].totalPrincipalCollected | number}}</b></h4>
+                                           </div>
+                                           <div class="col-lg-6">
+                                               Interest
+                                               <h4><b>{{dashboardData[portfolioID].totalInterestCollected | number}}</b></h4>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+                               <div class="col-lg-3 ">
+                                   <div class="card colorPanel3">
+                                       <div class="row text-center padding-10">
+                                           <p>Overdue Amount</p>
+                                           <div class="col-lg-6">
+                                               Principal
+                                               <h4><b>{{dashboardData[portfolioID].totalOverduePrincipal | number}}</b></h4>
+                                           </div>
+                                           <div class="col-lg-6">
+                                               Interest
+                                               <h4><b>{{dashboardData[portfolioID].totalOverdueInterest | number}}</b></h4>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <! End portfolio>
+               <hr class="hrColor" />
+               <! Start Clients Onboarding>
+               <div class="row">
+                   <div class="col-lg-12">
+                       <div class="panel panel-default">
+                           <div class="panel-heading text-center">Clients Onboarding</div>
+                           <div class="content-body">
+                               <! Filter>
+                               <div class="container row padding-15">
+                                   <div class="col-lg-2">
+                                       <select ng-options="item.value as item.name for item in dashboardData[clientOnBoardId].filterData.offices" ng-change="onFilterDropdownChanged(clientOnBoardId,'offices')" ng-model="dashboardData[clientOnBoardId].selectedoffices" class="form-control">
+                                           <option value=""> Select Office </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-3">
+                                       <select ng-options="item.value as item.name for item in dashboardData[clientOnBoardId].filterData.staffs" ng-change="onFilterDropdownChanged(clientOnBoardId,'staffs')" ng-model="dashboardData[clientOnBoardId].selectedstaffs" class="form-control">
+                                           <option value=""> Select Staff </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2" ng-if="isMFI">
+                                       <select ng-options="item.value as item.name for item in dashboardData[clientOnBoardId].filterData.centers" ng-change="onFilterDropdownChanged(clientOnBoardId,'centers')" ng-model="dashboardData[clientOnBoardId].selectedcenters" class="form-control">
+                                           <option value=""> Select Centers </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2" ng-if="isMFI">
+                                       <select ng-options="item.value as item.name for item in dashboardData[clientOnBoardId].filterData.groups" ng-change="onFilterDropdownChanged(clientOnBoardId,'groups')" ng-model="dashboardData[clientOnBoardId].selectedgroups" class="form-control">
+                                           <option value=""> Select Groups </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-12 padding-10">
+                                    <div class="col-lg-2">
+                                        Date range
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="fromDate" type="text" name="fromDate" datepicker-pop="dd MMMM yyyy" ng-model="dashboardData[clientOnBoardId].selectedFromDate" is-open="opened1" min="'2000-01-01'" max="restrictDate" class="form-control">
+                                    </div>
+                                    <div class="col-lg-1">
+                                        To
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="toDate" type="text" name="toDate" datepicker-pop="dd MMMM yyyy" ng-model="dashboardData[clientOnBoardId].selectedToDate" is-open="opened1" min="'2000-01-01'" max="restrictDate" class="form-control">
+                                    </div>
+                                    <div class="btn-group">
+                                       <button class="btn btn-primary" ng-click="onDateFilter(clientOnBoardId,'date')"> Filter </button>
+                                    </div>
+                                </div>
+                               </div>
+                               <!./Filter>
+                               <nvd3  options="dashboardData[clientOnBoardId].chartOptions" data="dashboardData[clientOnBoardId].chartData"></nvd3>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <! End Clients Onboarding>
+               <hr class="hrColor" />
+               <! Start Loan Onboarding>
+               <div class="row">
+                   <div class="col-lg-12">
+                       <div class="panel panel-default">
+                           <div class="panel-heading text-center">Loan Onboarding</div>
+                           <div class="content-body">
+                               <! Filter>
+                               <div class="container row padding-15">
+                                   <div class="col-lg-2">
+                                       <select ng-options="item.value as item.name for item in dashboardData[loanOnBoardId].filterData.offices" ng-change="onFilterDropdownChanged(loanOnBoardId,'offices')" ng-model="dashboardData[loanOnBoardId].selectedoffices" class="form-control">
+                                           <option value=""> Select Office </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-3">
+                                       <select ng-options="item.value as item.name for item in dashboardData[loanOnBoardId].filterData.staffs" ng-change="onFilterDropdownChanged(loanOnBoardId,'staffs')" ng-model="dashboardData[loanOnBoardId].selectedstaffs" class="form-control">
+                                           <option value=""> Select Loan Officer </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2" ng-if="isMFI">
+                                       <select ng-options="item.value as item.name for item in dashboardData[loanOnBoardId].filterData.centers" ng-change="onFilterDropdownChanged(loanOnBoardId,'centers')" ng-model="dashboardData[loanOnBoardId].selectedcenters" class="form-control">
+                                           <option value=""> Select Centers </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2" ng-if="isMFI">
+                                       <select ng-options="item.value as item.name for item in dashboardData[loanOnBoardId].filterData.groups" ng-change="onFilterDropdownChanged(loanOnBoardId,'groups')" ng-model="dashboardData[loanOnBoardId].selectedgroups" class="form-control">
+                                           <option value=""> Select Groups </option>
+                                       </select>
+                                   </div>
+								   <div class="col-lg-2">
+                             <select  ng-options="item.value as item.name for item in dashboardData[loanOnBoardId].filterData.products" 
+                                ng-change="onFilterDropdownChanged(loanOnBoardId,'products')" 
+                                ng-model="dashboardData[loanOnBoardId].selectedproducts" class="form-control">
+                                <option value=""> Select Products </option>
+                             </select>
+                          </div> 
+                                   <div class="col-lg-12 padding-10">
+                                    <div class="col-lg-2">
+                                        Date range
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="fromDate" type="text" name="fromDate" datepicker-pop="dd MMMM yyyy" ng-model="dashboardData[loanOnBoardId].selectedFromDate" is-open="opened1" min="'2000-01-01'" max="restrictDate" class="form-control">
+                                    </div>
+                                    <div class="col-lg-1">
+                                        To
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="toDate" type="text" name="toDate" datepicker-pop="dd MMMM yyyy" ng-model="dashboardData[loanOnBoardId].selectedToDate" is-open="opened1" min="'2000-01-01'" max="restrictDate" class="form-control">
+                                    </div>
+                                    <div class="btn-group"s>
+                                       <button class="btn btn-primary" ng-click="onDateFilter(loanOnBoardId,'date')"> Filter </button>
+                                    </div>
+                                </div>
+
+                               </div>
+                               <!./Filter>
+                               <nvd3  options="dashboardData[loanOnBoardId].chartOptions" data="dashboardData[loanOnBoardId].chartData"></nvd3>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <! End Loan Onboarding>
+               <!--<hr class="hrColor" />
+               <! Start Client/Loan Status >
+               <div class="row">
+                   <div class="col-lg-6">
+                       <div class="panel panel-default">
+                           <div class="panel-heading text-center">Client Status</div>
+                           <div class="content-body">
+
+                               <! Filter>
+                               <div class="padding-15">
+                                   <div class="col-lg-2">
+                                       <select ng-options="item.value as item.name for item in dashboardData[ClientID].filterData.offices" ng-change="onFilterDropdownChanged(ClientID,'offices')" ng-model="dashboardData[ClientID].selectedoffices" class="form-control">
+                                           <option value=""> Select Office </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2">
+                                       <select ng-options="item.value as item.name for item in dashboardData[ClientID].filterData.staffs" ng-change="onFilterDropdownChanged(ClientID,'staffs')" ng-model="dashboardData[ClientID].selectedstaffs" class="form-control">
+                                           <option value=""> Select Staff </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2" ng-if="isMFI">
+                                       <select ng-options="item.value as item.name for item in dashboardData[ClientID].filterData.centers" ng-change="onFilterDropdownChanged(ClientID,'centers')" ng-model="dashboardData[ClientID].selectedcenters" class="form-control">
+                                           <option value=""> Select Centers </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2" ng-if="isMFI">
+                                       <select ng-options="item.value as item.name for item in dashboardData[ClientID].filterData.groups" ng-change="onFilterDropdownChanged(ClientID,'groups')" ng-model="dashboardData[ClientID].selectedgroups" class="form-control">
+                                           <option value=""> Select Groups </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-12 padding-10">
+                                    <div class="col-lg-2">
+                                        Date range
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="fromDate" type="text" name="fromDate" datepicker-pop="dd MMMM yyyy" ng-model="dashboardData[ClientID].selectedFromDate" is-open="opened1" min="'2000-01-01'" max="restrictDate" class="form-control">
+                                    </div>
+                                    <div class="col-lg-1">
+                                        To
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="toDate" type="text" name="toDate" datepicker-pop="dd MMMM yyyy" ng-model="dashboardData[ClientID].selectedToDate" is-open="opened1" min="'2000-01-01'" max="restrictDate" class="form-control">
+                                    </div>
+                                    <div class="btn-group">
+                                       <button class="btn btn-primary" ng-click="onDateFilter(ClientID,'date')"> Filter </button>
+                                    </div>
+                                </div>
+                                   <! <div class="col-lg-2">
+                             <select  ng-options="item.value as item.name for item in dashboardData[ClientID].filterData.products" 
+                                ng-change="onFilterDropdownChanged(ClientID,'products')" 
+                                ng-model="dashboardData[ClientID].selectedproducts" class="form-control">
+                                <option value=""> Select Products </option>
+                             </select>
+                          </div> >
+                               </div>
+                               <!./Filter>
+                               <nvd3  options="dashboardData[ClientID].chartOptions" data="dashboardData[ClientID].chartData"></nvd3>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="col-lg-6">
+                       <div class="panel panel-default">
+                           <div class="panel-heading text-center">Loan Status</div>
+                           <div class="content-body">
+
+                               <! Filter>
+                               <div class="padding-15">
+                                   <div class="col-lg-2">
+                                       <select ng-options="item.value as item.name for item in dashboardData[loanID].filterData.offices" ng-change="onFilterDropdownChanged(loanID,'offices')" ng-model="dashboardData[loanID].selectedoffices" class="form-control">
+                                           <option value=""> Select Office </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-3">
+                                       <select ng-options="item.value as item.name for item in dashboardData[loanID].filterData.staffs" ng-change="onFilterDropdownChanged(loanID,'staffs')" ng-model="dashboardData[loanID].selectedstaffs" class="form-control">
+                                           <option value=""> Select Loan Officer </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2" ng-if="isMFI">
+                                       <select ng-options="item.value as item.name for item in dashboardData[loanID].filterData.centers" ng-change="onFilterDropdownChanged(loanID,'centers')" ng-model="dashboardData[loanID].selectedcenters" class="form-control">
+                                           <option value=""> Select Centers </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2" ng-if="isMFI">
+                                       <select ng-options="item.value as item.name for item in dashboardData[loanID].filterData.groups" ng-change="onFilterDropdownChanged(loanID,'groups')" ng-model="dashboardData[loanID].selectedgroups" class="form-control">
+                                           <option value=""> Select Groups </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2">
+                                       <select ng-options="item.value as item.name for item in dashboardData[loanID].filterData.products" ng-change="onFilterDropdownChanged(loanID,'products')" ng-model="dashboardData[loanID].selectedproducts" class="form-control">
+                                           <option value=""> Select Products </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-12 padding-10">
+                                    <div class="col-lg-2">
+                                        Date range
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="fromDate" type="text" name="fromDate" datepicker-pop="dd MMMM yyyy" ng-model="dashboardData[loanID].selectedFromDate" is-open="opened1" min="'2000-01-01'" max="restrictDate" class="form-control">
+                                    </div>
+                                    <div class="col-lg-1">
+                                        To
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="toDate" type="text" name="toDate" datepicker-pop="dd MMMM yyyy" ng-model="dashboardData[loanID].selectedToDate" is-open="opened1" min="'2000-01-01'" max="restrictDate" class="form-control">
+                                    </div>
+                                    <div class="btn-group">
+                                       <button class="btn btn-primary" ng-click="onDateFilter(loanID,'date')"> Filter </button>
+                                    </div>
+                                </div>
+                               </div>
+                               <!./Filter>
+                               <nvd3  options="dashboardData[loanID].chartOptions" data="dashboardData[loanID].chartData"></nvd3>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <! End Client/Loan Status >-->
+               <hr class="hrColor" />
+               <! Start Dibursment>
+               <div class="row">
+                   <div class="col-lg-12">
+                       <div class="panel panel-default">
+                           <div class="panel-heading text-center">Loan Dibursement</div>
+                           <div class="content-body">
+
+                               <! Filter>
+                               <div class="container row padding-15">
+                                   <div class="col-lg-2">
+                                       <select ng-options="item.value as item.name for item in dashboardData[disbursedID].filterData.offices" ng-change="onFilterDropdownChanged(disbursedID,'offices')" ng-model="dashboardData[disbursedID].selectedoffices" class="form-control">
+                                           <option value=""> Select Office </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-3">
+                                       <select ng-options="item.value as item.name for item in dashboardData[disbursedID].filterData.staffs" ng-change="onFilterDropdownChanged(disbursedID,'staffs')" ng-model="dashboardData[disbursedID].selectedstaffs" class="form-control">
+                                           <option value=""> Select Loan Officer </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2" ng-if="isMFI">
+                                       <select ng-options="item.value as item.name for item in dashboardData[disbursedID].filterData.centers" ng-change="onFilterDropdownChanged(disbursedID,'centers')" ng-model="dashboardData[disbursedID].selectedcenters" class="form-control">
+                                           <option value=""> Select Centers </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2" ng-if="isMFI">
+                                       <select ng-options="item.value as item.name for item in dashboardData[disbursedID].filterData.groups" ng-change="onFilterDropdownChanged(disbursedID,'groups')" ng-model="dashboardData[disbursedID].selectedgroups" class="form-control">
+                                           <option value=""> Select Groups </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2">
+                                       <select ng-options="item.value as item.name for item in dashboardData[disbursedID].filterData.products" ng-change="onFilterDropdownChanged(disbursedID,'products')" ng-model="dashboardData[disbursedID].selectedproducts" class="form-control">
+                                           <option value=""> Select Products </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-12 padding-10">
+                                    <div class="col-lg-2">
+                                        Date range
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="fromDate" type="text" name="fromDate" datepicker-pop="dd MMMM yyyy" ng-model="dashboardData[disbursedID].selectedFromDate" is-open="opened1" min="'2000-01-01'" max="restrictDate" class="form-control">
+                                    </div>
+                                    <div class="col-lg-1">
+                                        To
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="toDate" type="text" name="toDate" datepicker-pop="dd MMMM yyyy" ng-model="dashboardData[disbursedID].selectedToDate" is-open="opened1" min="'2000-01-01'" max="restrictDate" class="form-control">
+                                    </div>
+                                    <div class="btn-group" >
+                                       <button class="btn btn-primary" ng-click="onDateFilter(disbursedID,'date')"> Filter </button>
+                                    </div>
+                                </div>
+                               </div>
+                               <!./Filter>
+                               <nvd3  options="dashboardData[disbursedID].chartOptions" data="dashboardData[disbursedID].chartData"></nvd3>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <! End Dibursment>
+               <!--<hr class="hrColor" />
+               <! Start Aging>
+               <div class="row">
+                   <div class="col-lg-12">
+                       <div class="panel panel-default">
+                           <div class="panel-heading text-center">Aging</div>
+                           <div class="content-body">
+
+                               <! Filter>
+                               <div class="container row padding-15">
+                                   <div class="col-lg-2">
+                                       <select ng-options="item.value as item.name for item in dashboardData[agingID].filterData.offices" ng-change="onFilterDropdownChanged(agingID,'offices')" ng-model="dashboardData[agingID].selectedoffices" class="form-control">
+                                           <option value=""> Select Office </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-3">
+                                       <select ng-options="item.value as item.name for item in dashboardData[agingID].filterData.staff" ng-change="onFilterDropdownChanged(agingID,'staff')" ng-model="dashboardData[agingID].selectedstaff" class="form-control">
+                                           <option value=""> Select Loan Officer </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2" ng-if="isMFI">
+                                       <select ng-options="item.value as item.name for item in dashboardData[agingID].filterData.centers" ng-change="onFilterDropdownChanged(agingID,'centers')" ng-model="dashboardData[agingID].selectedcenters" class="form-control">
+                                           <option value=""> Select Centers </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2" ng-if="isMFI">
+                                       <select ng-options="item.value as item.name for item in dashboardData[agingID].filterData.groups" ng-change="onFilterDropdownChanged(agingID,'groups')" ng-model="dashboardData[agingID].selectedgroups" class="form-control">
+                                           <option value=""> Select Groups </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2">
+                                       <select ng-options="item.value as item.name for item in dashboardData[agingID].filterData.products" ng-change="onFilterDropdownChanged(agingID,'products')" ng-model="dashboardData[agingID].selectedproducts" class="form-control">
+                                           <option value=""> Select Products </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-12 padding-10">
+                                    <div class="col-lg-2">
+                                        Date range
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="fromDate" type="text" name="fromDate" datepicker-pop="dd MMMM yyyy" ng-model="dashboardData[agingID].selectedFromDate" is-open="opened1" min="'2000-01-01'" max="restrictDate" class="form-control">
+                                    </div>
+                                    <div class="col-lg-1">
+                                        To
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="toDate" type="text" name="toDate" datepicker-pop="dd MMMM yyyy" ng-model="dashboardData[agingID].selectedToDate" is-open="opened1" min="'2000-01-01'" max="restrictDate" class="form-control">
+                                    </div>
+                                    <div class="btn-group">
+                                       <button class="btn btn-primary" ng-click="onDateFilter(agingID,'date')"> Filter </button>
+                                    </div>
+                                </div>
+                               </div>
+                               <!./Filter>
+                               <nvd3  options="dashboardData[agingID].chartOptions" data="dashboardData[agingID].chartData"></nvd3>
+                           </div>
+                       </div>
+                   </div>
+               </div>-->
+               <! End Aging>
+               <hr class="hrColor" />
+               <! Start Collections>
+               <div class="row">
+                   <div class="col-lg-12">
+                       <div class="panel panel-default">
+                           <div class="panel-heading text-center">Loan Collections</div>
+                           <div class="content-body">
+
+                               <! Filter>
+                               <div class="container row padding-15">
+                                   <div class="col-lg-2">
+                                       <select ng-options="item.value as item.name for item in dashboardData[collectionsID].filterData.offices" ng-change="onFilterDropdownChanged(collectionsID,'offices')" ng-model="dashboardData[collectionsID].selectedoffices" class="form-control">
+                                           <option value=""> Select Office </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-3">
+                                       <select ng-options="item.value as item.name for item in dashboardData[collectionsID].filterData.staff" ng-change="onFilterDropdownChanged(collectionsID,'staff')" ng-model="dashboardData[collectionsID].selectedstaff" class="form-control">
+                                           <option value=""> Select Loan Officer </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2" ng-if="isMFI">
+                                       <select ng-options="item.value as item.name for item in dashboardData[collectionsID].filterData.centers" ng-change="onFilterDropdownChanged(collectionsID,'centers')" ng-model="dashboardData[collectionsID].selectedcenters" class="form-control">
+                                           <option value=""> Select Centers </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2" ng-if="isMFI">
+                                       <select ng-options="item.value as item.name for item in dashboardData[collectionsID].filterData.groups" ng-change="onFilterDropdownChanged(collectionsID,'groups')" ng-model="dashboardData[collectionsID].selectedgroups" class="form-control">
+                                           <option value=""> Select Groups </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-2">
+                                       <select ng-options="item.value as item.name for item in dashboardData[collectionsID].filterData.products" ng-change="onFilterDropdownChanged(collectionsID,'products')" ng-model="dashboardData[collectionsID].selectedproducts" class="form-control">
+                                           <option value=""> Select Products </option>
+                                       </select>
+                                   </div>
+                                   <div class="col-lg-12 padding-10">
+                                    <div class="col-lg-2">
+                                        Date range
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="fromDate" type="text" name="fromDate" datepicker-pop="dd MMMM yyyy" ng-model="dashboardData[collectionsID].selectedFromDate" is-open="opened1" min="'2000-01-01'" max="restrictDate" class="form-control">
+                                    </div>
+                                    <div class="col-lg-1">
+                                        To
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="toDate" type="text" name="toDate" datepicker-pop="dd MMMM yyyy" ng-model="dashboardData[collectionsID].selectedToDate" is-open="opened1" min="'2000-01-01'" max="restrictDate" class="form-control">
+                                    </div>
+                                    <div class="btn-group">
+                                       <button class="btn btn-primary" ng-click="onDateFilter(collectionsID,'date')"> Filter </button>
+                                    </div>
+                                </div>
+                               </div>
+                               <!./Filter>
+                               <nvd3  options="dashboardData[collectionsID].chartOptions" data="dashboardData[collectionsID].chartData"></nvd3>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <! End Collections>
+           </div>
+
+       </div>
+       <! End Charts>
+   </div>
+
 </div>
