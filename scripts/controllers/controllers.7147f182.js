@@ -15685,6 +15685,7 @@
     });
 }(mifosX.controllers || {}));
 ;(function (module) { 
+	
     mifosX.controllers = _.extend(module, {
         RichDashboard: function (scope, resourceFactory, localStorageService, $rootScope, location, http) {
 
