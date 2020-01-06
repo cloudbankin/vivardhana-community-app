@@ -15737,7 +15737,7 @@
                         duration: 100,
                         useInteractiveGuideline: true,
                         xAxis: {
-                            axisLabel: chartOptions.xAxisTitle,
+							axisLabel: chartOptions.xAxisTitle,
                             showMaxMin: true,
                             tickFormat: function(d) {
                                 return d3.time.format("%d-%b-%Y")(new Date(d));
@@ -15748,8 +15748,8 @@
                             }
                         },
                         yAxis: {
-                            axisLabel: chartOptions.yAxisTitle,
-                            axisLabelDistance: -10
+							axisLabel: chartOptions.yAxisTitle,
+                            axisLabelDistance: 10
                             // tickFormat: function(d){
                             //     return d3.time.format('%x')(new Date(d)) 
                             // }
@@ -15872,11 +15872,11 @@
                                 'loanCollectionsData':'LINE'};     
 
 
-            scope.chartLabels ={'clientOnboardData':{xaxis:"Date", yaxis:"No. of Clients OnBoarded"},
+			scope.chartLabels ={'clientOnboardData':{xaxis:"Date", yaxis:"No. of Clients OnBoarded"},
                                 'loanOnboardData':{xaxis:"Date", yaxis:"No. of Loans OnBoarded"},
                                 'loanDisbursedData':{xaxis:"Date", yaxis:"No. of Loans Disbursed"},
                                 'loanCollectionsData':{xaxis:"Date", yaxis:"Loans Amount Collected"}
-                                };                                  
+								};     								
 
 
 
@@ -15884,38 +15884,46 @@
             scope.SimplePickerChange = function(){
             
             };
+
+            scope.$watch('dashboardData[loanOnBoardId].selectedFromDate',function(){
+                scope.onDateFilter(scope.loanOnBoardId,'date')
+            });
+
+            scope.$watch('dashboardData[loanOnBoardId].selectedToDate',function(){
+                scope.onDateFilter(scope.loanOnBoardId,'date')
+            });
     
              scope.onFilterDropdownChanged = function(chartID,filterControlID){
-                 console.log(scope.dashboardData[chartID])
+                 console.log(scope.dashboardData[scope.loanOnBoardId])
                  console.log(filterControlID)
 
                 if(filterControlID == "date"){
                  //Kindly read selectedFromDate,selectedToDate    
-                 moment(scope.dashboardData[chartID].selectedFromDate).format("MMM DD, YYYY");
-                 moment(scope.dashboardData[chartID].selectedToDate).format("MMM DD, YYYY");
+                 moment(scope.dashboardData[scope.loanOnBoardId].selectedFromDate).format("MMM DD, YYYY");
+                 moment(scope.dashboardData[scope.loanOnBoardId].selectedToDate).format("MMM DD, YYYY");
                 }
                 
                 
               if(filterControlID === 'products')
-                {
-                        scope.selecedProductId = scope.dashboardData[chartID]["selectedproducts"];
-                        
-                        if(scope.dashboardData[chartID].lastSelectedId === undefined || scope.dashboardData[chartID].lastSelectedId === '')
-                        {
-                            scope.filterId = '';
-                            scope.filterValue = null;
-                        }
-                        else
-                        {
-                            scope.filterId = scope.dashboardData[chartID].lastSelectedId ;
-                            scope.filterValue = scope.dashboardData[chartID].lastSelectedValue;
-                        }
-                }   
+				{
+						scope.selecedProductId = scope.dashboardData[scope.loanOnBoardId]["selectedproducts"];
+						
+						if(scope.dashboardData[scope.loanOnBoardId].lastSelectedId === undefined || scope.dashboardData[scope.loanOnBoardId].lastSelectedId === '')
+						{
+							scope.filterId = '';
+							scope.filterValue = null;
+						}
+						else
+						{
+							scope.filterId = scope.dashboardData[scope.loanOnBoardId].lastSelectedId ;
+							scope.filterValue = scope.dashboardData[scope.loanOnBoardId].lastSelectedValue;
+						}
+				}	
                 else if (filterControlID !== 'date') {
 
-                    if(scope.dashboardData[chartID]["selected"+filterControlID] !== null) {
+                    if(scope.dashboardData[scope.loanOnBoardId]["selected"+filterControlID] !== null) {
                             scope.filterId = filterControlID;
-                            scope.filterValue = scope.dashboardData[chartID]["selected"+filterControlID];
+                            scope.filterValue = scope.dashboardData[scope.loanOnBoardId]["selected"+filterControlID];
                 }
                 
                 else {
@@ -15925,10 +15933,10 @@
                         scope.count = 0;
                     scope.dropdownParentMapping[filterControlID].forEach((item)=>{
                             
-                        if(scope.dashboardData[chartID]["selected"+item] !== null && scope.dashboardData[chartID]["selected"+item] !== "" && scope.count === 0)
+                        if(scope.dashboardData[scope.loanOnBoardId]["selected"+item] !== null && scope.dashboardData[scope.loanOnBoardId]["selected"+item] !== "" && scope.count === 0)
                             {
                                 
-                                if(scope.dashboardData[chartID]["selected"+item] === undefined)
+                                if(scope.dashboardData[scope.loanOnBoardId]["selected"+item] === undefined)
                                 {
                                     scope.filterId = '';
                                     scope.filterValue = null;
@@ -15937,7 +15945,7 @@
                                 else
                                 {
                                     scope.filterId = item;
-                                    scope.filterValue =  scope.dashboardData[chartID]["selected"+item];
+                                    scope.filterValue =  scope.dashboardData[scope.loanOnBoardId]["selected"+item];
                                     scope.count = scope.count + 1;
                                 }
                             }
@@ -15962,18 +15970,108 @@
                 if(scope.selecedProductId === undefined)
                     scope.selecedProductId = null;
                 
-                scope.dashboardData[chartID].lastSelectedId = scope.filterId;
-                scope.dashboardData[chartID].lastSelectedValue = scope.filterValue;
+                scope.dashboardData[scope.loanOnBoardId].lastSelectedId = scope.filterId;
+                scope.dashboardData[scope.loanOnBoardId].lastSelectedValue = scope.filterValue;
+				
+				if(chartID === "portfolioSummaryData")
+				{
+					scope.fromDate = null;
+					scope.toDate =  null;
+				}
+				else {
+					scope.fromDate = moment(scope.dashboardData[scope.loanOnBoardId].selectedFromDate).format("MMM DD, YYYY");
+					scope.toDate =  moment(scope.dashboardData[scope.loanOnBoardId].selectedToDate).format("MMM DD, YYYY");
+                }
+
+                scope.items = [{id:"portfolioSummaryData", name:"Portfolio Summary"}, {id:"clientOnboardData", name:"Client OnBoard"}
+                ,{id: "loanOnboardData", name:"Loan OnBoard"},{id: "loanDisbursedData", name:"Loan Disbursement"},{id: "loanCollectionsData", name:"Loan Collections"}];
+ 
                 
-                if(chartID === "portfolioSummaryData")
-                {
-                    scope.fromDate = null;
-                    scope.toDate =  null;
-                }
-                else {
-                    scope.fromDate = moment(scope.dashboardData[chartID].selectedFromDate).format("MMM DD, YYYY");
-                    scope.toDate =  moment(scope.dashboardData[chartID].selectedToDate).format("MMM DD, YYYY");
-                }
+                scope.items.forEach(function(item){
+        
+                    http({
+                        url: 'https://'+ location.host() +':' + location.port() + '/fineract-provider/api/v1/dashboard/filter-chart',
+                        method: "POST",
+                        data: {
+                            chartID: item.id,
+                            filterID:scope.filterId,
+                            filterValue: scope.filterValue,
+                            fromDate: scope.fromDate,
+                            toDate: scope.toDate,
+                            productId: scope.selecedProductId
+                        }
+                    })
+                    .then(function(response) {
+						
+				if(item.id === "portfolioSummaryData")
+				{
+					scope.dashboardData[item.id].totalLoanDisbursed = response.data.totalLoanDisbursed;
+					scope.dashboardData[item.id].totalAmountDisbursed = response.data.totalAmountDisbursed;
+					scope.dashboardData[item.id].totalEarnings = response.data.totalEarnings;
+					scope.dashboardData[item.id].totalPrincipalCollected = response.data.totalPrincipalCollected;
+					scope.dashboardData[item.id].totalInterestCollected = response.data.totalInterestCollected;
+					scope.dashboardData[item.id].totalOverduePrincipal = response.data.totalOverduePrincipal;
+					scope.dashboardData[item.id].totalOverdueInterest = response.data.totalOverdueInterest;
+            	    	
+						if(filterControlID !== 'date') {
+										
+										scope.dropdownCascadingMapping[filterControlID].forEach((item1)=>{
+											
+											scope.dashboardData[item.id]["selected"+item1] = "";
+											scope.dashboardData[item.id].filterData[item1] = [];
+											scope.dashboardData[item.id].filterData[item1] = response.data.filterData[item1];
+											
+										});
+						}
+          
+				}					
+            	  else if(item.id !== "portfolioSummaryData") {      
+            	    	scope.dashboardData[item.id].lineChartdata = response.data.lineChartdata;
+            	    	
+						if(filterControlID !== 'date') {
+										
+										scope.dropdownCascadingMapping[filterControlID].forEach((item1)=>{
+											
+											scope.dashboardData[item.id]["selected"+item1] = "";
+											scope.dashboardData[item.id].filterData[item1] = [];
+											scope.dashboardData[item.id].filterData[item1] = response.data.filterData[item1];
+											
+										});
+						}
+            	    	
+                           scope.dashboardData[item.id].chartOptions = scope.getChartDef(scope.chartName[item.id],{xAxisTitle:scope.chartLabels[item.id].xaxis, yAxisTitle:scope.chartLabels[item.id].yaxis});
+                        scope.dashboardData[item.id].chartData =  scope.formSeries(scope.chartName[item.id], scope.dashboardData[item.id].lineChartdata,{seriesName:scope.seriesName[item.id]});
+				  }
+            	    },  
+                    function(response) { // optional
+                            // failed
+                    });
+                
+		
+                   /* if(item.id ==="portfolioSummaryData") {
+                    
+                        http.get("https://"+ location.host() + ':' + location.port() + "/fineract-provider/api/v1/dashboard?chartId="+item.id)
+                        .then(function(response) {
+                           scope.dashboardData[item.id] = response.data[item.id];
+                       scope.isMFI = response.data.mfi;
+                        }); 
+                    }
+                    
+                    else if(item.id !=="portfolioSummaryData") {
+                    
+                        http.get("https://"+ location.host() + ':' + location.port() + "/fineract-provider/api/v1/dashboard?chartId="+item.id)
+                        .then(function(response) {
+                           scope.dashboardData[item.id] = response.data[item.id];
+                       scope.dashboardData[item.id].chartOptions = scope.getChartDef(scope.chartName[item.id],{xAxisTitle:scope.chartLabels[item.id].xaxis, yAxisTitle:scope.chartLabels[item.id].yaxis});
+                                   scope.dashboardData[item.id].chartData =  scope.formSeries(scope.chartName[item.id], scope.dashboardData[item.id].lineChartdata,{seriesName:item.name});
+                       scope.dashboardData[item.id].selectedFromDate =  scope.dashboardData[item.id].filterData.fromDate;
+                        scope.dashboardData[item.id].selectedToDate =  scope.dashboardData[item.id].filterData.toDate;
+                       scope.isMFI = response.data.mfi;
+                        }); 
+                    }
+                           
+                        })
+                     
                 
                  http({
                         url: 'https://'+ location.host() +':' + location.port() + '/fineract-provider/api/v1/dashboard/filter-chart',
@@ -15988,77 +16086,182 @@
                         }
                     })
                     .then(function(response) {
-                        
-                if(chartID === "portfolioSummaryData")
-                {
-                    scope.dashboardData[chartID].totalLoanDisbursed = response.data.totalLoanDisbursed;
-                    scope.dashboardData[chartID].totalAmountDisbursed = response.data.totalAmountDisbursed;
-                    scope.dashboardData[chartID].totalEarnings = response.data.totalEarnings;
-                    scope.dashboardData[chartID].totalPrincipalCollected = response.data.totalPrincipalCollected;
-                    scope.dashboardData[chartID].totalInterestCollected = response.data.totalInterestCollected;
-                    scope.dashboardData[chartID].totalOverduePrincipal = response.data.totalOverduePrincipal;
-                    scope.dashboardData[chartID].totalOverdueInterest = response.data.totalOverdueInterest;
-                        
-                        if(filterControlID !== 'date') {
-                                        
-                                        scope.dropdownCascadingMapping[filterControlID].forEach((item)=>{
-                                            
-                                            scope.dashboardData[chartID]["selected"+item] = "";
-                                            scope.dashboardData[chartID].filterData[item] = [];
-                                            scope.dashboardData[chartID].filterData[item] = response.data.filterData[item];
-                                            
-                                        });
-                        }
+						
+				if(chartID === "portfolioSummaryData")
+				{
+					scope.dashboardData[chartID].totalLoanDisbursed = response.data.totalLoanDisbursed;
+					scope.dashboardData[chartID].totalAmountDisbursed = response.data.totalAmountDisbursed;
+					scope.dashboardData[chartID].totalEarnings = response.data.totalEarnings;
+					scope.dashboardData[chartID].totalPrincipalCollected = response.data.totalPrincipalCollected;
+					scope.dashboardData[chartID].totalInterestCollected = response.data.totalInterestCollected;
+					scope.dashboardData[chartID].totalOverduePrincipal = response.data.totalOverduePrincipal;
+					scope.dashboardData[chartID].totalOverdueInterest = response.data.totalOverdueInterest;
+            	    	
+						if(filterControlID !== 'date') {
+										
+										scope.dropdownCascadingMapping[filterControlID].forEach((item)=>{
+											
+											scope.dashboardData[chartID]["selected"+item] = "";
+											scope.dashboardData[chartID].filterData[item] = [];
+											scope.dashboardData[chartID].filterData[item] = response.data.filterData[item];
+											
+										});
+						}
           
-                }                   
-                  else if(chartID !== "portfolioSummaryData") {      
-                        scope.dashboardData[chartID].lineChartdata = response.data.lineChartdata;
-                        
-                        if(filterControlID !== 'date') {
-                                        
-                                        scope.dropdownCascadingMapping[filterControlID].forEach((item)=>{
-                                            
-                                            scope.dashboardData[chartID]["selected"+item] = "";
-                                            scope.dashboardData[chartID].filterData[item] = [];
-                                            scope.dashboardData[chartID].filterData[item] = response.data.filterData[item];
-                                            
-                                        });
-                        }
-                        
+				}					
+            	  else if(chartID !== "portfolioSummaryData") {      
+            	    	scope.dashboardData[chartID].lineChartdata = response.data.lineChartdata;
+            	    	
+						if(filterControlID !== 'date') {
+										
+										scope.dropdownCascadingMapping[filterControlID].forEach((item)=>{
+											
+											scope.dashboardData[chartID]["selected"+item] = "";
+											scope.dashboardData[chartID].filterData[item] = [];
+											scope.dashboardData[chartID].filterData[item] = response.data.filterData[item];
+											
+										});
+						}
+            	    	
                            scope.dashboardData[chartID].chartOptions = scope.getChartDef(scope.chartName[chartID],{xAxisTitle:scope.chartLabels[chartID].xaxis, yAxisTitle:scope.chartLabels[chartID].yaxis});
                         scope.dashboardData[chartID].chartData =  scope.formSeries(scope.chartName[chartID], scope.dashboardData[chartID].lineChartdata,{seriesName:scope.seriesName[chartID]});
-                  }
-                    },  
+				  }
+            	    },  
                     function(response) { // optional
                             // failed
-                    });
+                    });*/
                 
                  console.log(scope.dashboardData[chartID]["selected"+filterControlID])
          
-             }
-             
+             } )
+             } 
              scope.onDateFilter = function(chartID,filterControlID){
                  console.log(scope.dashboardData[chartID])
                  console.log(filterControlID)
 
+           
+
+                /*http({
+                    url: 'https://'+ location.host() +':' + location.port() + '/fineract-provider/api/v1/dashboard/filter-chart',
+                    method: "POST",
+                    data: {
+                        chartID: chartID,
+                        filterID:scope.dashboardData[chartID].lastSelectedId,
+                        filterValue: scope.dashboardData[chartID].lastSelectedValue,
+                        fromDate: moment(scope.dashboardData[chartID].selectedFromDate).format("MMM DD, YYYY"),
+                        toDate: moment(scope.dashboardData[chartID].selectedToDate).format("MMM DD, YYYY"),
+                        productId: scope.selecedProductId
+                    }
+                })
+                .then(function(response) {
+                    
+                    scope.dashboardData[chartID].lineChartdata = response.data.lineChartdata;
+                    
+    if(filterControlID !== 'date') {
+                    
+                    scope.dropdownCascadingMapping[filterControlID].forEach((item)=>{
+                        
+                        scope.dashboardData[chartID]["selected"+item] = "";
+                        scope.dashboardData[chartID].filterData[item] = [];
+                        scope.dashboardData[chartID].filterData[item] = response.data.filterData[item];
+                        
+                    });
+    }
+                    
+                       scope.dashboardData[chartID].chartOptions = scope.getChartDef(scope.chartName[chartID],{xAxisTitle:scope.chartLabels[chartID].xaxis, yAxisTitle:scope.chartLabels[chartID].yaxis});
+                    scope.dashboardData[chartID].chartData =  scope.formSeries(scope.chartName[chartID], scope.dashboardData[chartID].lineChartdata,{seriesName:scope.seriesName[chartID]});
+
+                }, 
+                function(response) { // optional
+                        // failed
+                });*/
+
                 if(filterControlID == "date"){
-                 //Kindly read selectedFromDate,selectedToDate    
-                 moment(scope.dashboardData[chartID].selectedFromDate).format("MMM DD, YYYY");
-                 moment(scope.dashboardData[chartID].selectedToDate).format("MMM DD, YYYY");
-                }
+                    //Kindly read selectedFromDate,selectedToDate    
+                    moment(scope.dashboardData[scope.loanOnBoardId].selectedFromDate).format("MMM DD, YYYY");
+                    moment(scope.dashboardData[scope.loanOnBoardId].selectedToDate).format("MMM DD, YYYY");
+                   }
+                   
+                   if(scope.dashboardData[scope.loanOnBoardId]["selectedproducts"] !== undefined)
+                       scope.selecedProductId = scope.dashboardData[scope.loanOnBoardId]["selectedproducts"];
+                   else scope.selecedProductId = null;
+                   
+                   
+                   if(scope.dashboardData[scope.loanOnBoardId].lastSelectedId === undefined)
+                   {
+                       scope.dashboardData[scope.loanOnBoardId].lastSelectedId = '';
+                       scope.dashboardData[scope.loanOnBoardId].lastSelectedValue =  null;
+                   }
+
+                scope.items = [ {id:"clientOnboardData", name:"Client OnBoard"}
+                ,{id: "loanOnboardData", name:"Loan OnBoard"},{id: "loanDisbursedData", name:"Loan Disbursement"},{id: "loanCollectionsData", name:"Loan Collections"}];
+ 
                 
-                if(scope.dashboardData[chartID]["selectedproducts"] !== undefined)
-                    scope.selecedProductId = scope.dashboardData[chartID]["selectedproducts"];
-                else scope.selecedProductId = null;
+                scope.items.forEach(function(item){
+        
+                    http({
+                        url: 'https://'+ location.host() +':' + location.port() + '/fineract-provider/api/v1/dashboard/filter-chart',
+                        method: "POST",
+                        data: {
+                            chartID: item.id,
+                            filterID:scope.dashboardData[scope.loanOnBoardId].lastSelectedId,
+                            filterValue: scope.dashboardData[scope.loanOnBoardId].lastSelectedValue,
+                            fromDate: moment(scope.dashboardData[scope.loanOnBoardId].selectedFromDate).format("MMM DD, YYYY"),
+                            toDate: moment(scope.dashboardData[scope.loanOnBoardId].selectedToDate).format("MMM DD, YYYY"),
+                            productId: scope.selecedProductId
+                        }
+                    })
+                    .then(function(response) {
+
+                        
+						
+				if(item.id === "portfolioSummaryData")
+				{
+					scope.dashboardData[item.id].totalLoanDisbursed = response.data.totalLoanDisbursed;
+					scope.dashboardData[item.id].totalAmountDisbursed = response.data.totalAmountDisbursed;
+					scope.dashboardData[item.id].totalEarnings = response.data.totalEarnings;
+					scope.dashboardData[item.id].totalPrincipalCollected = response.data.totalPrincipalCollected;
+					scope.dashboardData[item.id].totalInterestCollected = response.data.totalInterestCollected;
+					scope.dashboardData[item.id].totalOverduePrincipal = response.data.totalOverduePrincipal;
+					scope.dashboardData[item.id].totalOverdueInterest = response.data.totalOverdueInterest;
+            	    	
+						if(filterControlID !== 'date') {
+										
+										scope.dropdownCascadingMapping[filterControlID].forEach((item1)=>{
+											
+											scope.dashboardData[item.id]["selected"+item1] = "";
+											scope.dashboardData[item.id].filterData[item1] = [];
+											scope.dashboardData[item.id].filterData[item1] = response.data.filterData[item1];
+											
+										});
+						}
+          
+                }					
                 
                 
-                if(scope.dashboardData[chartID].lastSelectedId === undefined)
-                {
-                    scope.dashboardData[chartID].lastSelectedId = '';
-                    scope.dashboardData[chartID].lastSelectedValue =  null;
-                }
-                
-                 http({
+            	  else if(item.id !== "portfolioSummaryData") {      
+            	    	scope.dashboardData[item.id].lineChartdata = response.data.lineChartdata;
+            	    	
+						if(filterControlID !== 'date') {
+										
+										scope.dropdownCascadingMapping[filterControlID].forEach((item1)=>{
+											
+											scope.dashboardData[item.id]["selected"+item1] = "";
+											scope.dashboardData[item.id].filterData[item1] = [];
+											scope.dashboardData[item.id].filterData[item1] = response.data.filterData[item1];
+											
+										});
+						}
+            	    	
+                           scope.dashboardData[item.id].chartOptions = scope.getChartDef(scope.chartName[item.id],{xAxisTitle:scope.chartLabels[item.id].xaxis, yAxisTitle:scope.chartLabels[item.id].yaxis});
+                        scope.dashboardData[item.id].chartData =  scope.formSeries(scope.chartName[item.id], scope.dashboardData[item.id].lineChartdata,{seriesName:scope.seriesName[item.id]});
+				  }
+            	    },  
+                    function(response) { // optional
+                            // failed
+                    });
+                })
+                /* http({
                         url: 'https://'+ location.host() +':' + location.port() + '/fineract-provider/api/v1/dashboard/filter-chart',
                         method: "POST",
                         data: {
@@ -16091,40 +16294,42 @@
                     }, 
                     function(response) { // optional
                             // failed
-                    });
+                    });*/
                 
                  console.log(scope.dashboardData[chartID]["selected"+filterControlID])
          
              }
 
+
+
     scope.items = [{id:"portfolioSummaryData", name:"Portfolio Summary"}, {id:"clientOnboardData", name:"Client OnBoard"}
-                  ,{id: "loanOnboardData", name:"Loan OnBoard"},{id: "loanDisbursedData", name:"Loan Disbursement"},{id: "loanCollectionsData", name:"Loan Collections"}];
+			      ,{id: "loanOnboardData", name:"Loan OnBoard"},{id: "loanDisbursedData", name:"Loan Disbursement"},{id: "loanCollectionsData", name:"Loan Collections"}];
                  scope.getLandingData = function() {
 
     scope.items.forEach(function(item){
-        
-        
-        if(item.id ==="portfolioSummaryData") {
-        
+		
+		
+		if(item.id ==="portfolioSummaryData") {
+		
             http.get("https://"+ location.host() + ':' + location.port() + "/fineract-provider/api/v1/dashboard?chartId="+item.id)
             .then(function(response) {
                scope.dashboardData[item.id] = response.data[item.id];
-           scope.isMFI = response.data.mfi;
+	       scope.isMFI = response.data.mfi;
             }); 
-        }
-        
-        else if(item.id !=="portfolioSummaryData") {
-        
+		}
+		
+		else if(item.id !=="portfolioSummaryData") {
+		
             http.get("https://"+ location.host() + ':' + location.port() + "/fineract-provider/api/v1/dashboard?chartId="+item.id)
             .then(function(response) {
                scope.dashboardData[item.id] = response.data[item.id];
-           scope.dashboardData[item.id].chartOptions = scope.getChartDef(scope.chartName[item.id],{xAxisTitle:scope.chartLabels[item.id].xaxis, yAxisTitle:scope.chartLabels[item.id].yaxis});
+	       scope.dashboardData[item.id].chartOptions = scope.getChartDef(scope.chartName[item.id],{xAxisTitle:scope.chartLabels[item.id].xaxis, yAxisTitle:scope.chartLabels[item.id].yaxis});
                        scope.dashboardData[item.id].chartData =  scope.formSeries(scope.chartName[item.id], scope.dashboardData[item.id].lineChartdata,{seriesName:item.name});
-           scope.dashboardData[item.id].selectedFromDate =  scope.dashboardData[item.id].filterData.fromDate;
+		   scope.dashboardData[item.id].selectedFromDate =  scope.dashboardData[item.id].filterData.fromDate;
             scope.dashboardData[item.id].selectedToDate =  scope.dashboardData[item.id].filterData.toDate;
            scope.isMFI = response.data.mfi;
             }); 
-        }
+		}
                
             })
          
@@ -16141,6 +16346,7 @@
         $log.info("RichDashboard initialized");
     });
 }(mifosX.controllers || {}));
+
 
 ;(function (module) {
     mifosX.controllers = _.extend(module, {
