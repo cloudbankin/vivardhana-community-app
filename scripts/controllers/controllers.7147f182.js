@@ -15684,8 +15684,7 @@
         $log.info("ProfileController initialized");
     });
 }(mifosX.controllers || {}));
-;(function (module) { 
-	
+;(function (module) {
     mifosX.controllers = _.extend(module, {
         RichDashboard: function (scope, resourceFactory, localStorageService, $rootScope, location, http) {
 
@@ -32422,77 +32421,25 @@ scope.initPage();
 
                     console.log(this.formData, $rootScope);
 
-                    /*var URL = $rootScope.hostUrl + "/fineract-provider/api/v1/ckyc/download?tenantIdentifier=" + $rootScope.tenantIdentifier
-                        + "&selectedLoans=" + selectedLoans;*/
+                    var URL = $rootScope.hostUrl + "/fineract-provider/api/v1/ckyc/download?tenantIdentifier=" + $rootScope.tenantIdentifier 
+                        + "&selectedLoans=" + selectedLoans;
 
-                        //var URL = $rootScope.hostUrl + "/fineract-provider/api/v1/ckyc/textfile?tenantIdentifier=" + $rootScope.tenantIdentifier;
+                        // $http({
+                        //     metod : "GET",
+                        //     url:$rootScope.hostUrl +"/fineract-provider/api/v1/ckyc/download",
+                        //     params : {selectedLoans : selectedLoans}
+                        // }).then(function success(response){
 
-                         $http({
-                             method : "GET",
-                             url:$rootScope.hostUrl + "/fineract-provider/api/v1/ckyc/download?tenantIdentifier=" + $rootScope.tenantIdentifier
-                                                         + "&selectedLoans=" + selectedLoans,
-                             params : {selectedLoans : selectedLoans},
-                             responseType:'arraybuffer'
-                         }).then(function success(response){
-                             console.log("The Content-Type is "+response.headers('test'));
+                        //     scope.myRes = response.data;
+                        //     scope.statuscode = response.status;
 
-                             var hitForTheTextFile = true;
-
-                             if(response.headers('Content-Type') == "application/zip"){
-                                var blob = new Blob([response.data], {type: "application/zip"});
-                                saveAs(blob, getFileNameFromHttpResponse(response));
-                                if(response.headers('Error-Status') == "success"){
-                                    hitForTheTextFile = false;
-                                }
-                             }else if(response.headers('Content-Type') == "text/plain"){
-                                var blob = new Blob([response.data], {type: "text/plain;charset=utf-8;"});
-                                saveAs(blob, getFileNameFromHttpResponse(response));
-                                hitForTheTextFile = false;
-                             }   
-
-                            if(hitForTheTextFile){
-                                //For getting the error.txt file
-                                 $http({
-                                     method : "GET",
-                                     url:$rootScope.hostUrl + "/fineract-provider/api/v1/ckyc/textfile?tenantIdentifier=" + $rootScope.tenantIdentifier
-                                 }).then(function success(response){
-                                     //console.log("The Content-Type is "+response.headers('Content-Type'));
-                                     var blob = new Blob([response.data], {type: "text/plain;charset=utf-8;"});
-                                     saveAs(blob, getFileNameFromHttpResponse(response));
-                                 },function error(response){
-                                     scope.myRes1 = response.statusText;
-                                 });   
-                            }
-                             
-
-                         }, function error(response){
-                             scope.myRes = response.statusText;
-                         });
-
-
-                         //For getting the file name
-                         function getFileNameFromHttpResponse(httpResponse) {
-                               var contentDispositionHeader = httpResponse.headers('Content-Disposition');
-                               var result = contentDispositionHeader.split(';')[1].trim().split('=')[1];
-                               return result.replace(/"/g, '');
-                         }
-
-                         // Save as Code
-                         function saveAs(blob, fileName){
-                             var url = window.URL.createObjectURL(blob);
-
-                             var doc = document.createElement("a");
-                             doc.href = url;
-                             doc.download = fileName;
-                             doc.click();
-                             window.URL.revokeObjectURL(url);
-                         }
-
-
+                        // }, function error(response){
+                        //     scope.myRes = response.statusText;
+                        // });
                   
                   
                   
-                  //window.open(URL, "_blank");
+                  window.open(URL, "_blank");
                    
 
                     //  route.reload();        
