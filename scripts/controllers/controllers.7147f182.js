@@ -32300,6 +32300,9 @@ scope.initPage();
             //     location.path('/viewchannelpartner/' + id);
             // };
 
+             //For displaying the ckyc loading message
+             scope.ckycLoadingMessage = "";
+
             scope.getResultsPage = function (pageNumber) {
                 if (scope.searchText) {
                     var startPosition = (pageNumber - 1) * scope.approvedLoansPerPage;
@@ -32316,7 +32319,7 @@ scope.initPage();
                     limit: scope.approvedLoansPerPage
                 }, function (data) {
                     scope.approvedLoans = data.pageItems;
-                    scope.refresh();
+                    //scope.refresh();
                 });
 
             }
@@ -32409,6 +32412,9 @@ scope.initPage();
                 if (selectedLoans == "" || selectedLoans == undefined) {
                     scope.selectedLoanErrorMsg = "Select any one Approved loan";
                 } else if (selectedLoans) {
+                    //For displaying the ckyc loading message
+                    scope.ckycLoadingMessage = "Please wait, while your request being processed...";
+
                     scope.selectedLoanErrorMsg = "";
                     scope.sentForExecution = [];
                     for (var i in selectedLoans) {
@@ -32421,25 +32427,85 @@ scope.initPage();
 
                     console.log(this.formData, $rootScope);
 
-                    var URL = $rootScope.hostUrl + "/fineract-provider/api/v1/ckyc/download?tenantIdentifier=" + $rootScope.tenantIdentifier 
-                        + "&selectedLoans=" + selectedLoans;
+                    /*var URL = $rootScope.hostUrl + "/fineract-provider/api/v1/ckyc/download?tenantIdentifier=" + $rootScope.tenantIdentifier
+                        + "&selectedLoans=" + selectedLoans;*/
 
-                        // $http({
-                        //     metod : "GET",
-                        //     url:$rootScope.hostUrl +"/fineract-provider/api/v1/ckyc/download",
-                        //     params : {selectedLoans : selectedLoans}
-                        // }).then(function success(response){
+                        //var URL = $rootScope.hostUrl + "/fineract-provider/api/v1/ckyc/textfile?tenantIdentifier=" + $rootScope.tenantIdentifier;
 
-                        //     scope.myRes = response.data;
-                        //     scope.statuscode = response.status;
+                         $http({
+                             method : "GET",
+                             url:$rootScope.hostUrl + "/fineract-provider/api/v1/ckyc/download?tenantIdentifier=" + $rootScope.tenantIdentifier
+                                                         + "&selectedLoans=" + selectedLoans,
+                             params : {selectedLoans : selectedLoans},
+                             responseType:'arraybuffer'
+                         }).then(function success(response){
+                             console.log("The Content-Type is "+response.headers('test'));
 
-                        // }, function error(response){
-                        //     scope.myRes = response.statusText;
-                        // });
+                             var hitForTheTextFile = true;
+
+                             if(response.headers('Content-Type') == "application/zip"){
+                                var blob = new Blob([response.data], {type: "application/zip"});
+                                saveAs(blob, getFileNameFromHttpResponse(response));
+                                if(response.headers('Error-Status') == "success"){
+                                    hitForTheTextFile = false;
+                                }
+                             }else if(response.headers('Content-Type') == "text/plain"){
+                                var blob = new Blob([response.data], {type: "text/plain;charset=utf-8;"});
+                                saveAs(blob, getFileNameFromHttpResponse(response));
+                                hitForTheTextFile = false;
+                             }   
+
+                            if(hitForTheTextFile){
+                                //For getting the error.txt file
+                                 $http({
+                                     method : "GET",
+                                     url:$rootScope.hostUrl + "/fineract-provider/api/v1/ckyc/textfile?tenantIdentifier=" + $rootScope.tenantIdentifier
+                                 }).then(function success(response){
+                                     //console.log("The Content-Type is "+response.headers('Content-Type'));
+                                     var blob = new Blob([response.data], {type: "text/plain;charset=utf-8;"});
+                                     saveAs(blob, getFileNameFromHttpResponse(response));
+                                     scope.ckycLoadingMessage = "";
+                                     scope.getResultsPage(1);
+                                 },function error(response){
+                                     scope.ckycLoadingMessage = "";
+                                     scope.myRes1 = response.statusText;
+                                     scope.getResultsPage(1);
+                                 });   
+                            }else{
+                                 scope.ckycLoadingMessage = "";
+                                 scope.getResultsPage(1);
+                            }
+
+                         }, function error(response){
+                             scope.ckycLoadingMessage = "";
+                             scope.myRes = response.statusText;
+                             scope.getResultsPage(1);
+                         });
+
+
+                         //For getting the file name
+                         function getFileNameFromHttpResponse(httpResponse) {
+                               var contentDispositionHeader = httpResponse.headers('Content-Disposition');
+                               var result = contentDispositionHeader.split(';')[1].trim().split('=')[1];
+                               return result.replace(/"/g, '');
+                         }
+
+                         // Save as Code
+                         function saveAs(blob, fileName){
+                             var url = window.URL.createObjectURL(blob);
+
+                             var doc = document.createElement("a");
+                             doc.href = url;
+                             doc.download = fileName;
+                             doc.click();
+                             window.URL.revokeObjectURL(url);
+                         }
+
+
                   
                   
                   
-                  window.open(URL, "_blank");
+                  //window.open(URL, "_blank");
                    
 
                     //  route.reload();        
@@ -32448,8 +32514,8 @@ scope.initPage();
                     // resourceFactory.bankRemittanceDownloadResource.download({selectedLoans,bankId:scope.bankIdDetails}, function (data) {
 
                     //  });
-                    scope.refresh();
-                    scope.getResultsPage(1);
+                    //scope.refresh();
+                    //scope.getResultsPage(1);
                 }
 
 
